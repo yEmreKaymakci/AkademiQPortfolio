@@ -1,0 +1,62 @@
+﻿@model List<Experience>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="skills-container">
+	<div class="page-header">
+		<h1>Deneyimler Sayfası</h1>
+		<a href="/Experiences/CreateExperience/" class="btn-create">Yeni Proje Girişi</a>
+	</div>
+
+	<div class="modern-table-wrapper">
+		<table class="modern-table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Şirket Adı</th>
+					<th>Giriş/Çıkış Tarihi</th>
+					<th>Pozisyon</th>
+					<th>Açıklama</th>
+					<th>Icon Linki</th>
+					<th>Sil</th>
+					<th>Güncelle</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<span class="badge-id">@item.ExperienceId</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.CompanyName</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Workdate</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Title</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Description</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.IconUrl</span>
+						</td>
+						<td>
+							<a href="/Experiences/DeleteExperience/@item.ExperienceId" class="btn-action btn-delete">Sil</a>
+						</td>
+						<td>
+							<a href="/Experiences/UpdateExperience/@item.ExperienceId" class="btn-action btn-update">Güncelle</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

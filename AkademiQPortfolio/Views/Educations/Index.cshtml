@@ -1,0 +1,54 @@
+﻿@model List<Education>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="skills-container">
+	<div class="page-header">
+		<h1>Eğitimler Sayfası</h1>
+		<a href="/Educations/CreateEducation/" class="btn-create">Yeni Eğitim Girişi</a>
+	</div>
+
+	<div class="modern-table-wrapper">
+		<table class="modern-table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Kurum Adı</th>
+					<th>Bölüm</th>
+					<th>Eğitim Tarihi</th>
+					<th>Sil</th>
+					<th>Güncelle</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<span class="badge-id">@item.EducationId</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Title</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Department</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.EducationDate</span>
+						</td>
+						<td>
+							<a href="/Educations/DeleteEducation/@item.EducationId" class="btn-action btn-delete">Sil</a>
+						</td>
+						<td>
+							<a href="/Educations/UpdateEducation/@item.EducationId" class="btn-action btn-update">Güncelle</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

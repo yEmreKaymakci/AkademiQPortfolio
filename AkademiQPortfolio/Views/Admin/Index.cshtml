@@ -97,6 +97,21 @@
 			</header>
 			<!-- Dashboard Content -->
 			@RenderBody()
+			<div id="imageModal" class="modal-overlay" onclick="this.style.display='none'">
+				<img class="modal-content" id="fullImage">
+			</div>
+
+			<script>
+				// Global fonksiyon: Her sayfadan çağrılabilir
+				function openModal(imgSrc) {
+					const modal = document.getElementById('imageModal');
+					const modalImg = document.getElementById('fullImage');
+					if(modal && modalImg) {
+						modalImg.src = imgSrc;
+						modal.style.display = 'flex';
+					}
+				}
+			</script>
 		</main>
 	</div>
 </body>

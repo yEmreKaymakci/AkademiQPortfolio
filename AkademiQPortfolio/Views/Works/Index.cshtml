@@ -1,0 +1,61 @@
+﻿@model List<Work>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="skills-container">
+	<div class="page-header">
+		<h1>Projeler Sayfası</h1>
+		<a href="/Works/CreateWork/" class="btn-create">Yeni Proje Girişi</a>
+	</div>
+
+	<div class="modern-table-wrapper">
+		<table class="modern-table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Proje Adı</th>
+					<th>Proje Bilgisi</th>
+					<th>Resim Linki</th>
+					<th>Sil</th>
+					<th>Güncelle</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<span class="badge-id">@item.WorkId</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Title</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.SubTitle</span>
+						</td>
+						<td>
+							<div class="flex justify-center">
+								<img src="@item.ImageUrl"
+									 class="admin-img-preview cursor-pointer"
+									 onclick="openModal(this.src)">
+							</div>
+						</td>
+						<td>
+							<a href="/Works/DeleteWork/@item.WorkId" class="btn-action btn-delete">Sil</a>
+						</td>
+						<td>
+							<a href="/Works/UpdateWork/@item.WorkId" class="btn-action btn-update">Güncelle</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="imageModal" class="modal-overlay" onclick="this.style.display='none'">
+	<img class="modal-content" id="fullImage">
+</div>

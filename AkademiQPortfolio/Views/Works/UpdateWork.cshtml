@@ -1,0 +1,50 @@
+﻿@model Work
+
+@{
+    ViewData["Title"] = "UpdateWork";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="create-container">
+	<div class="page-header">
+		<h1 class="text-3xl font-bold text-white">Proje Güncelleme Sayfası</h1>
+		<p class="text-slate-400 mt-2">Projeniz ile igili bilgileri ve projenizin görsellerini buradan değiştirebilirsiniz. </p>
+	</div>
+
+	<div class="max-w-4xl mx-auto bg-[#2d3748] rounded-[2rem] p-8 shadow-2xl border border-slate-700">
+		<form method="post">
+			<input type="hidden" asp-for="WorkId" />
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+				<div class="flex flex-col gap-2">
+					<label class="form-label">Proje Adı</label>
+					<input type="text" asp-for="Title" class="form-input p-3 rounded-xl w-full" placeholder="Örn: Seyehat.web..." required />
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<label class="form-label">Proje Bilgisi</label>
+					<input type="text" asp-for="SubTitle" class="form-input p-3 rounded-xl w-full" placeholder="Örn: Bu bir seyehat aja..." required />
+				</div>
+
+				<div class="flex flex-col gap-2 md:col-span-2">
+					<label class="form-label">Resim Linki (URL)</label>
+					<input type="text" asp-for="ImageUrl" class="form-input p-3 rounded-xl w-full" placeholder="https://resim-linki.com/gorsel.jpg" />
+				</div>
+
+			</div>
+
+			<div class="mt-8 pt-6 border-t border-slate-700 flex justify-end gap-4">
+				<a href="/Works/Index" class="px-6 py-3 rounded-xl font-bold text-slate-400 hover:text-white transition-colors">
+					Vazgeç
+				</a>
+				<button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-blue-900/20 transform hover:-translate-y-1 transition-all">
+					Kaydet ve Yayınla
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

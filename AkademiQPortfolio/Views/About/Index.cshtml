@@ -1,0 +1,74 @@
+﻿@model List<About>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="skills-container">
+    <div class="page-header">
+        <h1>Hakkımda Sayfası</h1>
+        <a href="/About/CreateAbout/" class="btn-create">Yeni Hakkımda Girişi</a>
+    </div>
+
+    <div class="modern-table-wrapper">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>İsim/Soyisim</th>
+                    <th>Başlık</th>
+                    <th>Açıklama</th>
+                    <th>Telefon</th>
+                    <th>Eposta</th>
+                    <th>Adres</th>
+                    <th>Resim Linki</th>
+                    <th>Sil</th>
+                    <th>Güncelle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge-id">@item.AboutId</span>
+                        </td>
+                        <td>
+                            <span class="skill-title">@item.NameSurname</span>
+                        </td>
+                        <td>
+                            <span class="skill-title">@item.Title</span>
+                        </td>
+                        <td>
+                            <span class="skill-title">@item.Description</span>
+                        </td>
+                        <td>
+                            <span class="skill-title">@item.PhoneNumber</span>
+                        </td>
+                        <td>
+                            <span class="skill-title">@item.Email</span>
+                        </td>
+                        <td>
+                            <span class="skill-title">@item.Address</span>
+                        </td>
+                        <td>
+                            <div class="flex justify-center">
+                                <img src="@item.ImageUrl"
+                                     class="admin-img-preview cursor-pointer"
+                                     onclick="openModal(this.src)">
+                            </div>
+                        </td>
+                        <td>
+                            <a href="/About/DeleteAbout/@item.AboutId" class="btn-action btn-delete">Sil</a>
+                        </td>
+                        <td>
+                            <a href="/About/UpdateAbout/@item.AboutId" class="btn-action btn-update">Güncelle</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

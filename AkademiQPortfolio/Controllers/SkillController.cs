@@ -15,7 +15,7 @@ namespace AkademiQPortfolio.Controllers
 
         public IActionResult SkillList()
         {
-            var values = _context.Skills.ToList();  
+            var values = _context.Skills.ToList();
             return View(values);
         }
         [HttpGet]
@@ -46,8 +46,9 @@ namespace AkademiQPortfolio.Controllers
         [HttpPost]
         public IActionResult UpdateSkill(Skill skill)
         {
-            _context.Skills.Update(skill);            _context.SaveChanges();
+            _context.Skills.Update(skill);
+            _context.SaveChanges();
             return RedirectToAction("SkillList");
-        } 
+        }
     }
 }

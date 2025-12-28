@@ -1,0 +1,232 @@
+﻿/* GENEL AYARLAR */
+.skills-container, .admin-container {
+    padding: 2rem;
+    background: #1e293b;
+    min-height: 100vh;
+}
+
+/* SAYFA BAŞLIĞI (HEADER) */
+.page-header {
+    background: #2d3748;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid #3b82f6;
+}
+
+    .page-header h1 {
+        margin: 0;
+        color: white;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+/* TABLO TASARIMI */
+.modern-table-wrapper {
+    background: #2d3748;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 1px solid #374151;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #2d3748;
+}
+
+    .modern-table thead {
+        background: #3b82f6;
+    }
+
+        .modern-table thead th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: white;
+        }
+
+    .modern-table tbody tr {
+        border-bottom: 1px solid #374151;
+        transition: all 0.3s ease;
+    }
+
+        .modern-table tbody tr:hover {
+            background: #374151;
+            transform: scale(1.005); /* Tabloyu bozmaması için hafif küçülttüm */
+        }
+
+    .modern-table tbody td {
+        padding: 1.25rem 1.5rem;
+        color: #e2e8f0;
+    }
+
+/* BUTONLAR VE ROZETLER */
+.badge-id {
+    display: inline-block;
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.btn-action {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: white;
+}
+
+    .btn-delete:hover {
+        background: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        color: white;
+    }
+
+.btn-update {
+    background: #059669;
+    color: white;
+}
+
+    .btn-update:hover {
+        background: #047857;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        color: white;
+    }
+
+.btn-create {
+    background: #3b82f6;
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+    .btn-create:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        color: white;
+    }
+
+/* RESİM ÖNİZLEME */
+.admin-img-preview {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #3b82f6;
+    transition: all 0.3s ease;
+}
+
+    .admin-img-preview:hover {
+        transform: scale(2.5);
+        z-index: 100;
+        position: relative;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+
+/* MOBİL UYUMLULUK */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .modern-table {
+        font-size: 0.8rem;
+    }
+}
+/* FORM SAYFALARI İÇİN EKLEME (CREATE & UPDATE) */
+
+.create-container {
+    padding: 2rem;
+    background: #1e293b;
+    min-height: 100vh;
+}
+
+.form-label {
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-input {
+    background: #1e293b !important;
+    border: 1px solid #4b5563 !important;
+    color: white !important; /* Verilerin görünmesini sağlayan kritik satır */
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+    .form-input:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        outline: none;
+    }
+
+/* Textarea için özel ayar */
+textarea.form-input {
+    min-height: 120px;
+}
+/* ORTAK RESİM MODAL STİLLERİ */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    animation: zoomIn 0.3s ease; /* Hafif bir açılış animasyonu */
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

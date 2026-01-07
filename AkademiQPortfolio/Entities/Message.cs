@@ -15,5 +15,5 @@ public partial class Message
 
     public bool? IsRead { get; set; }
 
-    public string MessageSubject { get; set; }
+    public string? MessageSubject { get; set; }
 }

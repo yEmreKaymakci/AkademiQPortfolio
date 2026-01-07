@@ -30,6 +30,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Skill> Skills { get; set; }
 
+    public virtual DbSet<Testimonial> Testimonials { get; set; }
+
     public virtual DbSet<Work> Works { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -85,6 +87,7 @@ public partial class AppDbContext : DbContext
         {
             entity.HasNoKey();
 
+            entity.Property(e => e.MessageSubject).HasMaxLength(50);
             entity.Property(e => e.MessageText).HasMaxLength(500);
             entity.Property(e => e.SendDate).HasColumnType("datetime");
             entity.Property(e => e.SenderEmail).HasMaxLength(50);
@@ -94,6 +97,13 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Skill>(entity =>
         {
             entity.Property(e => e.SkillTitle).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Testimonial>(entity =>
+        {
+            entity.Property(e => e.Comment).HasMaxLength(150);
+            entity.Property(e => e.NameSurname).HasMaxLength(50);
+            entity.Property(e => e.Title).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Work>(entity =>

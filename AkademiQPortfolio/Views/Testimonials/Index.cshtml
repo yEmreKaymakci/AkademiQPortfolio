@@ -1,0 +1,62 @@
+﻿@model List<Testimonial>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="skills-container">
+	<div class="page-header">
+		<h1>Deneyimler Sayfası</h1>
+		<a href="/Testimonials/CreateTestimonial/" class="btn-create">Yeni Referans Girişi</a>
+	</div>
+
+	<div class="modern-table-wrapper">
+		<table class="modern-table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Referans Adı</th>
+					<th>Ünvan</th>
+					<th>Resim Linki</th>
+					<th>Mesaj</th>
+					<th>Sil</th>
+					<th>Güncelle</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<span class="badge-id">@item.TestimonialId</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.NameSurname</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Title</span>
+						</td>
+						<td>
+							<div class="flex justify-center">
+								<img src="@item.ImageUrl"
+									 class="admin-img-preview cursor-pointer"
+									 onclick="openModal(this.src)">
+							</div>
+						</td>
+						<td>
+							<span class="skill-title">@item.Comment</span>
+						</td>
+						<td>
+							<a href="/Testimonials/DeleteTestimonial/@item.TestimonialId" class="btn-action btn-delete">Sil</a>
+						</td>
+						<td>
+							<a href="/Testimonials/UpdateTestimonial/@item.TestimonialId" class="btn-action btn-update">Güncelle</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

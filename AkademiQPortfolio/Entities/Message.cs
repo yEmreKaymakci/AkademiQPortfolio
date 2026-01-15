@@ -5,6 +5,8 @@ namespace AkademiQPortfolio.Entities;
 
 public partial class Message
 {
+    public int MessageId { get; set; }
+
     public string? SenderName { get; set; }
 
     public string? SenderEmail { get; set; }

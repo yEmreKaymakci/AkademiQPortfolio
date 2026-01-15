@@ -62,5 +62,36 @@ namespace AkademiQPortfolio.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public IActionResult DeleteMessage(int id)
+        {
+            try
+            {
+                // 1. Mesajı Bul
+                var message = _context.Messages.Find(id);
+
+                if (message == null)
+                {
+                    // Mesaj yoksa hata dön
+                    return Json(new { success = false, message = "Mesaj veritabanında bulunamadı (ID: " + id + ")" });
+                }
+
+                // 2. Mesajı Sil
+                _context.Messages.Remove(message);
+
+                // 3. Değişiklikleri Kaydet
+                _context.SaveChanges();
+
+                // 4. Başarılı Dön
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Hata olursa (örn: veritabanı bağlantı hatası) detayını dön
+                return Json(new { success = false, message = "Sunucu Hatası: " + ex.Message });
+            }
+        }
     }
 }
+

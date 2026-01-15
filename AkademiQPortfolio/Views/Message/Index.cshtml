@@ -1,479 +1,679 @@
 ﻿@model List<Message>
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Admin/Index.cshtml";
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Admin/Index.cshtml";
 }
 @functions {
-    // --- YARDIMCI C# FONKSİYONLARI ---
-    public string GetSentimentIcon(string text)
-    {
-        if (string.IsNullOrEmpty(text)) return "sentiment_neutral";
-        text = text.ToLower();
-        string[] positives = { "teşekkür", "harika", "güzel", "memnun", "başarılı", "süper", "onay", "teklif", "kabul", "muazzam", "tebrik", "iyi", "fırsat", "destek", "sevdim", "beğendim", "işbirliği", "katkı", "olumlu", "net", "hızlı" };
-        string[] negatives = { "hata", "sorun", "kötü", "iptal", "şikayet", "yanlış", "olmadı", "başarısız", "eksik", "problem", "gecikme", "yavaş", "kızgın", "memnuniyetsiz", "arızalı", "çalışmıyor", "bozuk", "iade", "red" };
-        if (positives.Any(p => text.Contains(p))) return "sentiment_satisfied";
-        if (negatives.Any(n => text.Contains(n))) return "sentiment_dissatisfied";
-        return "sentiment_neutral";
-    }
+	// --- YARDIMCI FONKSİYONLAR ---
+	public string GetSentimentIcon(string text)
+	{
+		if (string.IsNullOrEmpty(text)) return "sentiment_neutral";
+		text = text.ToLower();
+		string[] positives = { "teşekkür", "harika", "güzel", "memnun", "başarılı", "süper", "onay", "teklif", "kabul", "muazzam", "tebrik", "iyi", "fırsat", "destek", "sevdim", "beğendim", "işbirliği", "katkı", "olumlu", "net", "hızlı" };
+		string[] negatives = { "hata", "sorun", "kötü", "iptal", "şikayet", "yanlış", "olmadı", "başarısız", "eksik", "problem", "gecikme", "yavaş", "kızgın", "memnuniyetsiz", "arızalı", "çalışmıyor", "bozuk", "iade", "red" };
+		if (positives.Any(p => text.Contains(p))) return "sentiment_satisfied";
+		if (negatives.Any(n => text.Contains(n))) return "sentiment_dissatisfied";
+		return "sentiment_neutral";
+	}
 
-    public string GetSentimentColor(string icon)
-    {
-        if (icon == "sentiment_satisfied") return "text-[#3CBC55]";
-        if (icon == "sentiment_dissatisfied") return "text-[#CC3333]";
-        return "text-gray-400";
-    }
+	public string GetSentimentColor(string icon)
+	{
+		if (icon == "sentiment_satisfied") return "text-[#3CBC55]";
+		if (icon == "sentiment_dissatisfied") return "text-[#CC3333]";
+		return "text-gray-400";
+	}
 
-    public string GetInitials(string name)
-    {
-        if (string.IsNullOrEmpty(name)) return "XX";
-        var parts = name.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-        if (parts.Length == 0) return "XX";
-        if (parts.Length == 1) return parts[0].Substring(0, 1).ToUpper();
-        return (parts[0].Substring(0, 1) + parts[parts.Length - 1].Substring(0, 1)).ToUpper();
-    }
+	public string GetInitials(string name)
+	{
+		if (string.IsNullOrEmpty(name)) return "XX";
+		var parts = name.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+		if (parts.Length == 0) return "XX";
+		if (parts.Length == 1) return parts[0].Substring(0, 1).ToUpper();
+		return (parts[0].Substring(0, 1) + parts[parts.Length - 1].Substring(0, 1)).ToUpper();
+	}
 
-    public string GetReadingTime(string text)
-    {
-        if (string.IsNullOrEmpty(text)) return "1 dk";
-        int wordCount = text.Split(' ').Length;
-        int minutes = wordCount / 150;
-        return minutes < 1 ? "1 dk" : $"{minutes} dk";
-    }
+	public string GetReadingTime(string text)
+	{
+		if (string.IsNullOrEmpty(text)) return "1 dk";
+		int wordCount = text.Split(' ').Length;
+		int minutes = wordCount / 150;
+		return minutes < 1 ? "1 dk" : $"{minutes} dk";
+	}
 
-    public string GetRandomGradient(int id)
-    {
-        var gradients = new List<string> {
-            "from-indigo-500 to-purple-600", "from-blue-500 to-cyan-500",
-            "from-emerald-500 to-teal-600", "from-pink-500 to-rose-500",
-            "from-orange-500 to-amber-500", "from-violet-600 to-fuchsia-600"
-        };
-        return gradients[id % gradients.Count];
-    }
+	public string GetRandomGradient(int id)
+	{
+		var gradients = new List<string> {
+			"from-indigo-500 to-purple-600", "from-blue-500 to-cyan-500",
+			"from-emerald-500 to-teal-600", "from-pink-500 to-rose-500",
+			"from-orange-500 to-amber-500", "from-violet-600 to-fuchsia-600"
+		};
+		return gradients[id % gradients.Count];
+	}
 }
 
 <!DOCTYPE html>
 <html class="dark" lang="tr">
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Mesaj Yönetim Paneli</title>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<title>Mesaj Yönetim Paneli</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#00c4c7",
-                        "background-dark": "#0f172a",
-                        "ocean-deep": "#1e3a8a",
-                    },
-                    fontFamily: { "display": ["Space Grotesk", "sans-serif"] },
-                    animation: { 'float': 'float 10s ease-in-out infinite' },
-                    keyframes: { float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } } }
-                }
-            }
-        }
-    </script>
-    <style>
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(0, 196, 199, 0.15);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+	<script>
+		tailwind.config = {
+			darkMode: "class",
+			theme: {
+				extend: {
+					colors: {
+						"primary": "#00c4c7",
+						"background-dark": "#0f172a",
+						"ocean-deep": "#1e3a8a",
+						"danger": "#ef4444"
+					},
+					fontFamily: { "display": ["Space Grotesk", "sans-serif"] },
+					animation: { 'float': 'float 10s ease-in-out infinite' },
+					keyframes: { float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } } }
+				}
+			}
+		}
+	</script>
+	<style>
+		.glass-panel {
+			background: rgba(15, 23, 42, 0.6);
+			backdrop-filter: blur(24px);
+			-webkit-backdrop-filter: blur(24px);
+			border: 1px solid rgba(0, 196, 199, 0.15);
+			box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+		}
 
-        .message-glow {
-            box-shadow: 0 0 15px rgba(0, 196, 199, 0.1);
-        }
+		.message-glow {
+			box-shadow: 0 0 15px rgba(0, 196, 199, 0.1);
+		}
 
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
+		.scrollbar-hide::-webkit-scrollbar {
+			display: none;
+		}
 
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            opacity: 0.4;
-        }
+		.blob {
+			position: absolute;
+			border-radius: 50%;
+			filter: blur(80px);
+			z-index: 0;
+			opacity: 0.4;
+		}
 
-        .tab-active {
-            background-color: rgba(0, 196, 199, 0.15);
-            border-color: #00c4c7;
-            color: #fff;
-        }
+		.tab-active {
+			background-color: rgba(0, 196, 199, 0.15);
+			border-color: #00c4c7;
+			color: #fff;
+		}
 
-        .tab-inactive {
-            border-color: transparent;
-            color: rgba(255,255,255,0.5);
-        }
+		.tab-inactive {
+			border-color: transparent;
+			color: rgba(255,255,255,0.5);
+		}
 
-            .tab-inactive:hover {
-                background-color: rgba(255,255,255,0.05);
-                color: #fff;
-            }
+			.tab-inactive:hover {
+				background-color: rgba(255,255,255,0.05);
+				color: #fff;
+			}
 
-        /* Dropdown Animasyonları */
-        .dropdown-menu {
-            transform-origin: top left;
-            transition: all 0.2s ease-out;
-        }
+		.dropdown-menu {
+			transform-origin: top left;
+			transition: all 0.2s ease-out;
+		}
 
-        .dropdown-open {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
+		.dropdown-open {
+			opacity: 1;
+			transform: scale(1);
+			pointer-events: auto;
+		}
 
-        .dropdown-closed {
-            opacity: 0;
-            transform: scale(0.95);
-            pointer-events: none;
-        }
-    </style>
+		.dropdown-closed {
+			opacity: 0;
+			transform: scale(0.95);
+			pointer-events: none;
+		}
+
+		/* --- SİLME BUTONU EFEKTLERİ --- */
+		.delete-btn-container {
+			position: relative;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		/* SVG Çember */
+		.progress-ring {
+			pointer-events: none; /* BU SATIR ÇOK ÖNEMLİ: Tıklamayı butona geçirir */
+		}
+
+		.progress-ring__circle {
+			transition: stroke-dashoffset 0.1s linear;
+			transform: rotate(-90deg);
+			transform-origin: 50% 50%;
+			stroke: #ef4444;
+			pointer-events: none; /* Garanti olsun diye buraya da ekle */
+		}
+
+		/* Titreme Animasyonu */
+		@@keyframes shake {
+			0% {
+				transform: translate(1px, 1px) rotate(0deg);
+			}
+
+			10% {
+				transform: translate(-1px, -2px) rotate(-1deg);
+			}
+
+			20% {
+				transform: translate(-3px, 0px) rotate(1deg);
+			}
+
+			30% {
+				transform: translate(3px, 2px) rotate(0deg);
+			}
+
+			40% {
+				transform: translate(1px, -1px) rotate(1deg);
+			}
+
+			50% {
+				transform: translate(-1px, 2px) rotate(-1deg);
+			}
+
+			60% {
+				transform: translate(-3px, 1px) rotate(0deg);
+			}
+
+			70% {
+				transform: translate(3px, 1px) rotate(-1deg);
+			}
+
+			80% {
+				transform: translate(-1px, -1px) rotate(1deg);
+			}
+
+			90% {
+				transform: translate(1px, 2px) rotate(0deg);
+			}
+
+			100% {
+				transform: translate(1px, -2px) rotate(-1deg);
+			}
+		}
+
+		.shaking {
+			animation: shake 0.5s;
+			animation-iteration-count: infinite;
+		}
+
+		/* Silinme (Yok olma) Animasyonu */
+		.disintegrate {
+			transition: all 0.8s ease-out;
+			transform: scale(0.8) translateX(100px);
+			opacity: 0;
+			filter: blur(10px);
+			max-height: 0;
+			margin: 0;
+			padding: 0;
+			border: none;
+		}
+	</style>
 </head>
 
 <body class="bg-background-dark font-display text-white overflow-hidden h-screen w-full relative selection:bg-primary selection:text-background-dark">
 
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="blob bg-ocean-deep w-[600px] h-[600px] -top-20 -left-20 animate-float"></div>
-        <div class="blob bg-primary w-[400px] h-[400px] bottom-0 right-0 animate-float opacity-20"></div>
-    </div>
+	<div class="fixed inset-0 overflow-hidden pointer-events-none">
+		<div class="blob bg-ocean-deep w-[600px] h-[600px] -top-20 -left-20 animate-float"></div>
+		<div class="blob bg-primary w-[400px] h-[400px] bottom-0 right-0 animate-float opacity-20"></div>
+	</div>
 
-    <div class="relative z-10 flex h-full w-full flex-col items-center justify-center p-2 sm:p-6">
-        <div class="glass-panel w-full max-w-6xl h-[95vh] flex flex-col rounded-xl overflow-hidden">
+	<div class="relative z-10 flex h-full w-full flex-col items-center justify-center p-2 sm:p-6">
+		<div class="glass-panel w-full max-w-6xl h-[95vh] flex flex-col rounded-xl overflow-hidden">
 
-            <header class="p-6 border-b border-white/5 flex flex-col justify-between gap-4 bg-gradient-to-r from-white/5 to-transparent relative z-30">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <div>
-                        <h1 class="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">Gelen Kutusu</h1>
-                        <p class="text-white/40 text-xs mt-1">Yönetim Paneli & İletişim Merkezi</p>
-                    </div>
-                    <div class="flex items-center gap-2 mt-2 md:mt-0">
-                        <p class="text-primary text-sm font-medium uppercase flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                            </span>
-                            Bekleyen: @Model.Count(x => x.IsRead == false)
-                        </p>
-                    </div>
-                </div>
+			<header class="p-6 border-b border-white/5 flex flex-col justify-between gap-4 bg-gradient-to-r from-white/5 to-transparent relative z-30">
+				<div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+					<div>
+						<h1 class="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">Gelen Kutusu</h1>
+						<p class="text-white/40 text-xs mt-1">Basılı tutarak mesajları silebilirsiniz.</p>
+					</div>
+					<div class="flex items-center gap-2 mt-2 md:mt-0">
+						<p class="text-primary text-sm font-medium uppercase flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+							<span class="relative flex h-2 w-2">
+								<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+								<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+							</span>
+							Bekleyen: <span id="unread-count">@Model.Count(x => x.IsRead == false)</span>
+						</p>
+					</div>
+				</div>
 
-                <div class="flex overflow-visible pb-1 gap-2 scrollbar-hide select-none items-center">
+				<div class="flex overflow-visible pb-1 gap-2 scrollbar-hide select-none items-center">
+					<div class="relative inline-block text-left">
+						<button id="dropdown-trigger" onclick="toggleDropdown()" class="tab-active px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300 flex items-center gap-2 min-w-[140px] justify-between">
+							<span id="current-filter-text">Tüm Mesajlar</span>
+							<span class="material-symbols-outlined text-[18px]">expand_more</span>
+						</button>
 
-                    <div class="relative inline-block text-left">
-                        <button id="dropdown-trigger" onclick="toggleDropdown()" class="tab-active px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300 flex items-center gap-2 min-w-[140px] justify-between">
-                            <span id="current-filter-text">Tüm Mesajlar</span>
-                            <span class="material-symbols-outlined text-[18px]">expand_more</span>
-                        </button>
+						<div id="dropdown-menu" class="dropdown-menu dropdown-closed absolute left-0 mt-2 w-48 rounded-lg glass-panel z-50 flex flex-col p-1 border border-white/10 shadow-xl">
+							<button onclick="filterMessages('all', this, true)" class="text-left px-4 py-3 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2">
+								<span class="material-symbols-outlined text-[18px] text-primary">all_inbox</span>
+								Tüm Mesajlar
+							</button>
+							<button onclick="filterMessages('unread', this, true)" class="text-left px-4 py-3 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2">
+								<span class="material-symbols-outlined text-[18px] text-red-400">mark_email_unread</span>
+								Okunmamış
+							</button>
+						</div>
+					</div>
 
-                        <div id="dropdown-menu" class="dropdown-menu dropdown-closed absolute left-0 mt-2 w-48 rounded-lg glass-panel z-50 flex flex-col p-1 border border-white/10 shadow-xl">
-                            <button onclick="filterMessages('all', this, true)" class="text-left px-4 py-3 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px] text-primary">all_inbox</span>
-                                Tüm Mesajlar
-                            </button>
-                            <button onclick="filterMessages('unread', this, true)" class="text-left px-4 py-3 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px] text-red-400">mark_email_unread</span>
-                                Okunmamış
-                            </button>
-                        </div>
-                    </div>
+					<div class="h-8 w-px bg-white/10 mx-1"></div>
 
-                    <div class="h-8 w-px bg-white/10 mx-1"></div> <div class="flex gap-2 overflow-x-auto scrollbar-hide">
-                        <button onclick="filterMessages('Proje Teklifi & İş Birliği', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">
-                            Proje & İş Birliği
-                        </button>
-                        <button onclick="filterMessages('Eğitim & Kurumsal Eğitim Talebi', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">
-                            Eğitim Talepleri
-                        </button>
-                        <button onclick="filterMessages('Web / API Geliştirme Talebi', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">
-                            Yazılım Geliştirme
-                        </button>
-                        <button onclick="filterMessages('Danışmanlık & Teknik Destek', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">
-                            Danışmanlık
-                        </button>
-                        <button onclick="filterMessages('Şikayet & Öneri', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">
-                            Şikayet & Öneri
-                        </button>
-                    </div>
-                </div>
-            </header>
+					<div class="flex gap-2 overflow-x-auto scrollbar-hide">
+						<button onclick="filterMessages('Proje Teklifi & İş Birliği', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">Proje & İş Birliği</button>
+						<button onclick="filterMessages('Eğitim & Kurumsal Eğitim Talebi', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">Eğitim Talepleri</button>
+						<button onclick="filterMessages('Web / API Geliştirme Talebi', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">Yazılım Geliştirme</button>
+						<button onclick="filterMessages('Danışmanlık & Teknik Destek', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">Danışmanlık</button>
+						<button onclick="filterMessages('Şikayet & Öneri', this)" class="tab-inactive px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-all duration-300">Şikayet & Öneri</button>
+					</div>
+				</div>
+			</header>
 
-            <main class="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-3 relative z-10" id="message-list-container">
-                @if (Model.Count == 0)
-                {
-                    <div class="text-center text-white/50 mt-10">Veritabanında henüz mesaj bulunmuyor.</div>
-                }
+			<main class="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-3 relative z-10" id="message-list-container">
+				@if (Model.Count == 0)
+				{
+					<div class="text-center text-white/50 mt-10">Veritabanında henüz mesaj bulunmuyor.</div>
+				}
 
-                @{
-                    int indexCounter = 0;
-                }
-                @foreach (var item in Model)
-                {
-                    bool isRead = item.IsRead ?? false;
-                    string glowClass = isRead ? "" : "message-glow";
-                    string unreadIndicatorClass = isRead ? "hidden" : "";
-                    string readIcon = isRead ? "mark_email_read" : "mark_email_unread";
-                    string readIconColor = isRead ? "text-primary" : "text-white/50";
-                    string sentimentIcon = GetSentimentIcon(item.MessageText);
-                    string sentimentColor = GetSentimentColor(sentimentIcon);
-                    string gradient = GetRandomGradient(indexCounter++);
+				@{
+					int indexCounter = 0;
+				}
+				@foreach (var item in Model)
+				{
+					bool isRead = item.IsRead ?? false;
+					string glowClass = isRead ? "" : "message-glow";
+					string unreadIndicatorClass = isRead ? "hidden" : "";
+					string readIcon = isRead ? "mark_email_read" : "mark_email_unread";
+					string readIconColor = isRead ? "text-primary" : "text-white/50";
+					string sentimentIcon = GetSentimentIcon(item.MessageText);
+					string sentimentColor = GetSentimentColor(sentimentIcon);
+					string gradient = GetRandomGradient(indexCounter++);
 
-                    <div class="message-item group relative flex flex-col md:flex-row items-center gap-4 p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer @glowClass"
-                         data-id="@item.MessageId"
-                         data-category="@item.MessageSubject"
-                         data-fulltext="@item.MessageText"
-                         data-sender="@item.SenderName"
-                         data-email="@item.SenderEmail"
-                         data-subject="@item.MessageSubject"
-                         data-isread="@(isRead ? "true" : "false")">
+					<div class="message-item group relative flex flex-col md:flex-row items-center gap-4 p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer @glowClass"
+						 data-id="@item.MessageId"
+						 data-category="@item.MessageSubject"
+						 data-fulltext="@item.MessageText"
+						 data-sender="@item.SenderName"
+						 data-email="@item.SenderEmail"
+						 data-subject="@item.MessageSubject"
+						 data-isread="@(isRead ? "true" : "false")">
 
-                        <div class="unread-indicator absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg @unreadIndicatorClass"></div>
+						<div class="unread-indicator absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg @unreadIndicatorClass"></div>
 
-                        <div class="relative shrink-0">
-                            <div class="h-12 w-12 rounded-full bg-gradient-to-br @gradient flex items-center justify-center text-lg font-bold text-white shadow-lg">
-                                @GetInitials(item.SenderName)
-                            </div>
-                            <div class="absolute -bottom-1 -right-1 bg-[#0f172a] rounded-full p-1 border border-white/10">
-                                <span class="material-symbols-outlined @sentimentColor text-[16px]">@sentimentIcon</span>
-                            </div>
-                        </div>
+						<div class="relative shrink-0">
+							<div class="h-12 w-12 rounded-full bg-gradient-to-br @gradient flex items-center justify-center text-lg font-bold text-white shadow-lg">
+								@GetInitials(item.SenderName)
+							</div>
+							<div class="absolute -bottom-1 -right-1 bg-[#0f172a] rounded-full p-1 border border-white/10">
+								<span class="material-symbols-outlined @sentimentColor text-[16px]">@sentimentIcon</span>
+							</div>
+						</div>
 
-                        <div class="flex-1 min-w-0 flex flex-col gap-0.5 w-full">
-                            <div class="flex justify-between items-baseline">
-                                <h3 class="text-base font-bold text-white truncate group-hover:text-primary transition-colors">@item.SenderName</h3>
-                                <span class="text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">@GetReadingTime(item.MessageText)</span>
-                            </div>
-                            <p class="text-white/90 text-sm font-medium truncate">@item.MessageSubject</p>
-                            <p class="text-white/50 text-xs truncate">@item.MessageText</p>
-                        </div>
+						<div class="flex-1 min-w-0 flex flex-col gap-0.5 w-full">
+							<div class="flex justify-between items-baseline">
+								<h3 class="text-base font-bold text-white truncate group-hover:text-primary transition-colors">@item.SenderName</h3>
+								<span class="text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">@GetReadingTime(item.MessageText)</span>
+							</div>
+							<p class="text-white/90 text-sm font-medium truncate">@item.MessageSubject</p>
+							<p class="text-white/50 text-xs truncate">@item.MessageText</p>
+						</div>
 
-                        <div class="flex items-center gap-4 justify-between w-full md:w-auto mt-2 md:mt-0 pl-2">
-                            <span class="text-white/40 text-[10px] font-mono">@(((DateTime)item.SendDate).ToString("dd MMM HH:mm"))</span>
+						<div class="flex items-center gap-4 justify-between w-full md:w-auto mt-2 md:mt-0 pl-2">
+							<span class="text-white/40 text-[10px] font-mono">@(((DateTime)item.SendDate).ToString("dd MMM HH:mm"))</span>
 
-                            <div class="flex items-center gap-2">
-                                <button type="button" class="toggle-read-btn p-2 rounded-full hover:bg-white/10 transition-colors z-20 relative bg-black/20 md:bg-transparent" title="Okundu/Okunmadı İşaretle">
-                                    <span class="material-symbols-outlined text-[20px] @readIconColor">@readIcon</span>
-                                </button>
-                                <span class="material-symbols-outlined text-[16px] text-white/40 group-hover:text-primary transition-colors">arrow_forward</span>
-                            </div>
-                        </div>
-                    </div>
-                }
-                <div id="no-results-msg" class="hidden text-center text-white/50 mt-10 p-4 border border-dashed border-white/10 rounded-lg">
-                    Bu kriterlere uygun mesaj bulunamadı.
-                </div>
-            </main>
+							<div class="flex items-center gap-2">
+								<button type="button" class="toggle-read-btn p-2 rounded-full hover:bg-white/10 transition-colors z-20 relative bg-black/20 md:bg-transparent" title="Okundu/Okunmadı">
+									<span class="material-symbols-outlined text-[20px] @readIconColor">@readIcon</span>
+								</button>
 
-            <footer class="p-3 bg-black/20 border-t border-white/5 text-center text-white/30 text-[10px] font-mono">
-                AkademiQ Portfolio | Message System v3.2
-            </footer>
-        </div>
-    </div>
+								<div class="delete-btn-container z-20" title="Silmek için basılı tut">
+									<svg class="progress-ring absolute w-full h-full" width="40" height="40">
+										<circle class="progress-ring__circle" stroke="transparent" stroke-width="2" fill="transparent" r="16" cx="20" cy="20" stroke-dasharray="100.5" stroke-dashoffset="100.5"></circle>
+									</svg>
 
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300" id="message-modal">
-        <div class="glass-panel w-full max-w-2xl p-8 rounded-xl shadow-2xl transform scale-95 transition-transform duration-300">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h2 id="modal-subject" class="text-2xl font-bold text-white mb-1">Konu Başlığı</h2>
-                    <p id="modal-sender" class="text-primary text-sm">Gönderen Bilgisi</p>
-                </div>
-                <button id="modal-close-x" class="text-white/50 hover:text-white transition-colors">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-            </div>
-            <div id="modal-body" class="prose prose-invert max-w-none mb-8 text-white/80 leading-relaxed font-light overflow-y-auto max-h-[40vh] text-sm"></div>
-            <div class="flex gap-4 justify-end">
-                <button id="modal-close-btn" class="px-6 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-colors">Kapat</button>
-                <button id="modal-reply-btn" class="px-6 py-2 rounded-lg bg-primary text-background-dark font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(0,196,199,0.4)]">Cevapla</button>
-            </div>
-        </div>
-    </div>
+									<button type="button" class="delete-action-btn p-2 rounded-full text-white/30 hover:text-red-500 hover:bg-white/5 transition-colors">
+										<span class="material-symbols-outlined text-[20px]">delete</span>
+									</button>
+								</div>
 
-    <script>
-        // --- DROPDOWN MANTIĞI ---
-        function toggleDropdown() {
-            const menu = document.getElementById('dropdown-menu');
-            if (menu.classList.contains('dropdown-closed')) {
-                menu.classList.remove('dropdown-closed');
-                menu.classList.add('dropdown-open');
-            } else {
-                menu.classList.remove('dropdown-open');
-                menu.classList.add('dropdown-closed');
-            }
-        }
+								<span class="material-symbols-outlined text-[16px] text-white/40 group-hover:text-primary transition-colors">arrow_forward</span>
+							</div>
+						</div>
+					</div>
+				}
+				<div id="no-results-msg" class="hidden text-center text-white/50 mt-10 p-4 border border-dashed border-white/10 rounded-lg">
+					Bu kriterlere uygun mesaj bulunamadı.
+				</div>
+			</main>
 
-        // Sayfa herhangi bir yerine tıklanırsa dropdownı kapat
-        window.addEventListener('click', function(e) {
-            const btn = document.getElementById('dropdown-trigger');
-            const menu = document.getElementById('dropdown-menu');
-            if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.remove('dropdown-open');
-                menu.classList.add('dropdown-closed');
-            }
-        });
+			<footer class="p-3 bg-black/20 border-t border-white/5 text-center text-white/30 text-[10px] font-mono">
+				AkademiQ Portfolio | Message System v3.3
+			</footer>
+		</div>
+	</div>
 
-        // --- GÜNCELLENMİŞ FİLTRELEME FONKSİYONU ---
-        function filterMessages(filterType, btnElement, isDropdownItem = false) {
-            const items = document.querySelectorAll('.message-item');
-            const noResult = document.getElementById('no-results-msg');
-            const dropdownTrigger = document.getElementById('dropdown-trigger');
-            const currentFilterText = document.getElementById('current-filter-text');
-            let visibleCount = 0;
+	<div class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300" id="message-modal">
+		<div class="glass-panel w-full max-w-2xl p-8 rounded-xl shadow-2xl transform scale-95 transition-transform duration-300">
+			<div class="flex justify-between items-start mb-6">
+				<div>
+					<h2 id="modal-subject" class="text-2xl font-bold text-white mb-1">Konu Başlığı</h2>
+					<p id="modal-sender" class="text-primary text-sm">Gönderen Bilgisi</p>
+				</div>
+				<button id="modal-close-x" class="text-white/50 hover:text-white transition-colors">
+					<span class="material-symbols-outlined">close</span>
+				</button>
+			</div>
+			<div id="modal-body" class="prose prose-invert max-w-none mb-8 text-white/80 leading-relaxed font-light overflow-y-auto max-h-[40vh] text-sm"></div>
+			<div class="flex gap-4 justify-end">
+				<button id="modal-close-btn" class="px-6 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-colors">Kapat</button>
+				<button id="modal-reply-btn" class="px-6 py-2 rounded-lg bg-primary text-background-dark font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(0,196,199,0.4)]">Cevapla</button>
+			</div>
+		</div>
+	</div>
 
-            // Eğer Dropdown içinden seçildiyse (Tüm Mesajlar / Okunmamış)
-            if (isDropdownItem) {
-                // Diğer yatay butonların aktifliğini kaldır
-                document.querySelectorAll('.tab-inactive, .tab-active').forEach(btn => {
-                    if(btn !== dropdownTrigger) {
-                        btn.classList.remove('tab-active');
-                        btn.classList.add('tab-inactive');
-                    }
-                });
+	<script>
+		// --- DROPDOWN & FİLTRELEME ---
+		function toggleDropdown() {
+			const menu = document.getElementById('dropdown-menu');
+			if (menu.classList.contains('dropdown-closed')) {
+				menu.classList.remove('dropdown-closed');
+				menu.classList.add('dropdown-open');
+			} else {
+				menu.classList.remove('dropdown-open');
+				menu.classList.add('dropdown-closed');
+			}
+		}
 
-                // Dropdown ana butonunu aktif yap
-                dropdownTrigger.classList.remove('tab-inactive');
-                dropdownTrigger.classList.add('tab-active');
+		window.addEventListener('click', function(e) {
+			const btn = document.getElementById('dropdown-trigger');
+			const menu = document.getElementById('dropdown-menu');
+			if (!btn.contains(e.target) && !menu.contains(e.target)) {
+				menu.classList.remove('dropdown-open');
+				menu.classList.add('dropdown-closed');
+			}
+		});
 
-                // Yazıyı güncelle
-                if(filterType === 'all') currentFilterText.innerText = "Tüm Mesajlar";
-                if(filterType === 'unread') currentFilterText.innerText = "Okunmamış";
+		function filterMessages(filterType, btnElement, isDropdownItem = false) {
+			const items = document.querySelectorAll('.message-item');
+			const noResult = document.getElementById('no-results-msg');
+			const dropdownTrigger = document.getElementById('dropdown-trigger');
+			const currentFilterText = document.getElementById('current-filter-text');
+			let visibleCount = 0;
 
-                // Menüyü kapat
-                toggleDropdown();
-            } else {
-                // Eğer yatay kategorilerden seçildiyse Dropdown butonunu pasif yap
-                dropdownTrigger.classList.remove('tab-active');
-                dropdownTrigger.classList.add('tab-inactive');
+			if (isDropdownItem) {
+				document.querySelectorAll('.tab-inactive, .tab-active').forEach(btn => {
+					if(btn !== dropdownTrigger) {
+						btn.classList.remove('tab-active');
+						btn.classList.add('tab-inactive');
+					}
+				});
+				dropdownTrigger.classList.remove('tab-inactive');
+				dropdownTrigger.classList.add('tab-active');
+				if(filterType === 'all') currentFilterText.innerText = "Tüm Mesajlar";
+				if(filterType === 'unread') currentFilterText.innerText = "Okunmamış";
+				toggleDropdown();
+			} else {
+				dropdownTrigger.classList.remove('tab-active');
+				dropdownTrigger.classList.add('tab-inactive');
+				currentFilterText.innerText = "Tüm Mesajlar";
+				document.querySelectorAll('.tab-inactive, .tab-active').forEach(btn => {
+				   if(btn !== dropdownTrigger) {
+					   btn.classList.remove('tab-active');
+					   btn.classList.add('tab-inactive');
+				   }
+				});
+				btnElement.classList.remove('tab-inactive');
+				btnElement.classList.add('tab-active');
+			}
 
-                // Yazıyı resetle
-                currentFilterText.innerText = "Tüm Mesajlar";
+			items.forEach(item => {
+				const itemCategory = item.getAttribute('data-category');
+				const isRead = item.getAttribute('data-isread') === 'true';
+				let shouldShow = false;
 
-                // Buton stillerini güncelle
-                document.querySelectorAll('.tab-inactive, .tab-active').forEach(btn => {
-                   if(btn !== dropdownTrigger) { // Dropdownı bozma
-                       btn.classList.remove('tab-active');
-                       btn.classList.add('tab-inactive');
-                   }
-                });
-                btnElement.classList.remove('tab-inactive');
-                btnElement.classList.add('tab-active');
-            }
+				if (filterType === 'all') shouldShow = true;
+				else if (filterType === 'unread') shouldShow = !isRead;
+				else shouldShow = (itemCategory === filterType);
 
-            // --- ANA FİLTRELEME MANTIĞI ---
-            items.forEach(item => {
-                const itemCategory = item.getAttribute('data-category');
-                const isRead = item.getAttribute('data-isread') === 'true';
+				if (shouldShow) {
+					item.style.display = 'flex';
+					visibleCount++;
+				} else {
+					item.style.display = 'none';
+				}
+			});
 
-                let shouldShow = false;
+			if (visibleCount === 0) noResult.classList.remove('hidden');
+			else noResult.classList.add('hidden');
+		}
 
-                if (filterType === 'all') {
-                    shouldShow = true; // Hepsini göster
-                } else if (filterType === 'unread') {
-                    shouldShow = !isRead; // Sadece okunmamışları göster
-                } else {
-                    // Kategoriye göre filtrele
-                    shouldShow = (itemCategory === filterType);
-                }
+		document.addEventListener('DOMContentLoaded', () => {
+			// --- DEĞİŞKENLER ---
+			const modal = document.getElementById('message-modal');
+			const messageRows = document.querySelectorAll('.message-item');
+			const modalSubject = document.getElementById('modal-subject');
+			const modalSender = document.getElementById('modal-sender');
+			const modalBody = document.getElementById('modal-body');
+			const replyButton = document.getElementById('modal-reply-btn');
+			const closeButtons = [document.getElementById('modal-close-x'), document.getElementById('modal-close-btn')];
+			const readButtons = document.querySelectorAll('.toggle-read-btn');
+			const deleteButtons = document.querySelectorAll('.delete-action-btn'); // Silme Butonları
 
-                if (shouldShow) {
-                    item.style.display = 'flex';
-                    visibleCount++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+			// --- 1. SİLME İŞLEMİ (GÜÇLENDİRİLMİŞ LONG PRESS v2) ---
+			deleteButtons.forEach(btn => {
+				let pressTimer;
+				let animationFrame;
+				let isDeleted = false;
+				let startTime; // Başlangıç zamanı
 
-            if (visibleCount === 0) noResult.classList.remove('hidden');
-            else noResult.classList.add('hidden');
-        }
+				const container = btn.parentElement;
+				const circle = container.querySelector('.progress-ring__circle');
+				const row = container.closest('.message-item');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('message-modal');
-            const messageRows = document.querySelectorAll('.message-item');
-            const modalSubject = document.getElementById('modal-subject');
-            const modalSender = document.getElementById('modal-sender');
-            const modalBody = document.getElementById('modal-body');
-            const replyButton = document.getElementById('modal-reply-btn');
-            const closeButtons = [document.getElementById('modal-close-x'), document.getElementById('modal-close-btn')];
-            const readButtons = document.querySelectorAll('.toggle-read-btn');
+				// Çember Ayarları
+				const radius = circle.r.baseVal.value;
+				const circumference = 2 * Math.PI * radius;
 
-            readButtons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+				circle.style.strokeDasharray = `${circumference} ${circumference}`;
+				circle.style.strokeDashoffset = circumference;
 
-                    const row = this.closest('.message-item');
-                    const messageId = row.getAttribute('data-id');
-                    const iconSpan = this.querySelector('span');
-                    const unreadIndicator = row.querySelector('.unread-indicator');
+				// Animasyonu Sıfırla
+				const resetAnimation = () => {
+					if (isDeleted) return;
+					cancelAnimationFrame(animationFrame);
+					circle.style.strokeDashoffset = circumference;
+					btn.classList.remove('text-red-500', 'shaking');
+					console.log("İptal edildi.");
+				};
 
-                    fetch('/Message/ChangeStatus?id=' + messageId, { method: 'POST' })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            row.setAttribute('data-isread', data.isRead ? "true" : "false");
+				// Silme İsteği (Backend)
+				const finishDelete = () => {
+					isDeleted = true;
+					btn.classList.remove('shaking');
 
-                            if (data.isRead) {
-                                row.classList.remove('message-glow');
-                                unreadIndicator.classList.add('hidden');
-                                iconSpan.innerText = 'mark_email_read';
-                                iconSpan.classList.add('text-primary');
-                                iconSpan.classList.remove('text-white/50');
-                            } else {
-                                row.classList.add('message-glow');
-                                unreadIndicator.classList.remove('hidden');
-                                iconSpan.innerText = 'mark_email_unread';
-                                iconSpan.classList.remove('text-primary');
-                                iconSpan.classList.add('text-white/50');
-                            }
-                        }
-                    })
-                    .catch(err => console.error('Hata:', err));
-                });
-            });
+					// Görsel Olarak Yok Etmeye Başla
+					row.style.transition = "all 0.5s ease";
+					row.style.transform = "translateX(100%)";
+					row.style.opacity = "0";
 
-            messageRows.forEach(row => {
-                row.addEventListener('click', function(e) {
-                    if (e.target.closest('.toggle-read-btn')) return;
+					// ID Kontrolü
+					const messageId = row.getAttribute('data-id');
+					console.log("Silinmek istenen ID:", messageId);
 
-                    const subject = this.getAttribute('data-subject');
-                    const sender = this.getAttribute('data-sender');
-                    const email = this.getAttribute('data-email');
-                    const text = this.getAttribute('data-fulltext');
+					if (!messageId) {
+						alert("Hata: Mesaj ID'si bulunamadı!");
+						row.style.transform = "none";
+						row.style.opacity = "1";
+						resetAnimation();
+						return;
+					}
 
-                    modalSubject.innerText = subject;
-                    modalSender.innerText = `${sender} <${email}>`;
-                    modalBody.innerHTML = `<p>${text}</p>`;
+					// Backend'e Gönder
+							// Razor motoru doğru yolu (Admin/Message vs.) otomatik bulur
+		fetch('@Url.Action("DeleteMessage", "Message")?id=' + messageId, { method: 'POST' })
+					.then(res => {
+						if (!res.ok) throw new Error("Sunucu hatası");
+						return res.json();
+					})
+					.then(data => {
+						console.log("Sunucu Cevabı:", data);
+						if(data.success) {
+							setTimeout(() => {
+								row.remove(); // DOM'dan sil
+							}, 500);
+						} else {
+							// Başarısızsa geri getir
+							row.style.transform = "none";
+							row.style.opacity = "1";
+							isDeleted = false; // Tekrar denenebilsin
+							alert("Silinemedi: " + (data.message || "Bilinmeyen hata"));
+							resetAnimation();
+						}
+					})
+					.catch(err => {
+						console.error("Fetch Hatası:", err);
+						row.style.transform = "none";
+						row.style.opacity = "1";
+						isDeleted = false;
+						alert("Sunucuyla iletişim kurulamadı.");
+						resetAnimation();
+					});
+				};
 
-                    replyButton.onclick = () => {
-                        window.location.href = `mailto:${email}?subject=Re: ${subject}`;
-                    };
+				// Basılı Tutma Başlangıcı
+				const startPress = (e) => {
+					if (e.type === 'mousedown' && e.button !== 0) return; // Sadece sol tık
 
-                    modal.classList.remove('opacity-0', 'pointer-events-none');
-                    modal.firstElementChild.classList.remove('scale-95');
-                    modal.firstElementChild.classList.add('scale-100');
-                });
-            });
+					isDeleted = false;
+					startTime = Date.now();
+					const duration = 1000; // 1 saniye basılı tutulmalı
 
-            function closeModal() {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                modal.firstElementChild.classList.add('scale-95');
-                modal.firstElementChild.classList.remove('scale-100');
-            }
+					btn.classList.add('text-red-500', 'shaking');
 
-            closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-        });
-    </script>
+					const animate = () => {
+						if (isDeleted) return;
+
+						let elapsed = Date.now() - startTime;
+						let progress = elapsed / duration;
+
+						// EĞER SÜRE DOLDUYSA - KESİN BİTİR
+						if (progress >= 1) {
+							circle.style.strokeDashoffset = 0; // Tam kırmızı yap
+							finishDelete(); // Silme fonksiyonunu çağır
+							return; // Döngüden çık
+						}
+
+						// Devam ediyorsa çemberi doldur
+						const offset = circumference - (progress * circumference);
+						circle.style.strokeDashoffset = offset;
+
+						animationFrame = requestAnimationFrame(animate);
+					};
+
+					animationFrame = requestAnimationFrame(animate);
+				};
+
+				// Olay Dinleyicileri
+				btn.addEventListener('mousedown', (e) => { e.stopPropagation(); startPress(e); });
+				btn.addEventListener('touchstart', (e) => { e.stopPropagation(); startPress(e); }, {passive: true});
+
+				btn.addEventListener('mouseup', (e) => { e.stopPropagation(); resetAnimation(); });
+				btn.addEventListener('mouseleave', (e) => { e.stopPropagation(); resetAnimation(); });
+				btn.addEventListener('touchend', (e) => { e.stopPropagation(); resetAnimation(); });
+
+				// Tıklama uyarısı
+				btn.addEventListener('click', (e) => {
+					e.stopPropagation();
+					if(!isDeleted) console.log("Bas-çek yapıldı, silinmedi.");
+				});
+			});
+
+
+			// --- 2. OKUNDU DURUMU ---
+			readButtons.forEach(btn => {
+				btn.addEventListener('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					const row = this.closest('.message-item');
+					const messageId = row.getAttribute('data-id');
+					const iconSpan = this.querySelector('span');
+					const unreadIndicator = row.querySelector('.unread-indicator');
+
+					fetch('/Message/ChangeStatus?id=' + messageId, { method: 'POST' })
+					.then(response => response.json())
+					.then(data => {
+						if (data.success) {
+							row.setAttribute('data-isread', data.isRead ? "true" : "false");
+							if (data.isRead) {
+								row.classList.remove('message-glow');
+								unreadIndicator.classList.add('hidden');
+								iconSpan.innerText = 'mark_email_read';
+								iconSpan.classList.add('text-primary');
+								iconSpan.classList.remove('text-white/50');
+							} else {
+								row.classList.add('message-glow');
+								unreadIndicator.classList.remove('hidden');
+								iconSpan.innerText = 'mark_email_unread';
+								iconSpan.classList.remove('text-primary');
+								iconSpan.classList.add('text-white/50');
+							}
+						}
+					});
+				});
+			});
+
+			// --- 3. POPUP AÇMA ---
+			messageRows.forEach(row => {
+				row.addEventListener('click', function(e) {
+					// Butonlara tıklayınca popup açılmasın
+					if (e.target.closest('.toggle-read-btn') || e.target.closest('.delete-btn-container')) return;
+
+					const subject = this.getAttribute('data-subject');
+					const sender = this.getAttribute('data-sender');
+					const email = this.getAttribute('data-email');
+					const text = this.getAttribute('data-fulltext');
+
+					modalSubject.innerText = subject;
+					modalSender.innerText = `${sender} <${email}>`;
+					modalBody.innerHTML = `<p>${text}</p>`;
+
+					replyButton.onclick = () => {
+						window.location.href = `mailto:${email}?subject=Re: ${subject}`;
+					};
+
+					modal.classList.remove('opacity-0', 'pointer-events-none');
+					modal.firstElementChild.classList.remove('scale-95');
+					modal.firstElementChild.classList.add('scale-100');
+				});
+			});
+
+			function closeModal() {
+				modal.classList.add('opacity-0', 'pointer-events-none');
+				modal.firstElementChild.classList.add('scale-95');
+				modal.firstElementChild.classList.remove('scale-100');
+			}
+
+			closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) closeModal();
+			});
+		});
+	</script>
 </body>
 </html>

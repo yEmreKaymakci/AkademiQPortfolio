@@ -230,3 +230,44 @@ textarea.form-input {
         opacity: 1;
     }
 }
+
+/* Harita Butonu Özel Tasarımı */
+.btn-map-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; /* İkon ve yazı arası boşluk */
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); /* Modern İndigo Gradient */
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 50px; /* Tam yuvarlak (Hap) kenarlar */
+    font-size: 0.75rem; /* 12px */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3); /* Hafif mor gölge */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none; /* Link olursa alt çizgi olmasın */
+}
+
+    /* Hover (Üzerine Gelince) Efekti */
+    .btn-map-view:hover {
+        background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+        transform: translateY(-2px); /* Hafif yukarı kalkar */
+        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.5); /* Gölge büyür */
+        color: white;
+    }
+
+    /* Active (Tıklanınca) Efekti */
+    .btn-map-view:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px -1px rgba(79, 70, 229, 0.3);
+    }
+
+    /* İkon Ayarı */
+    .btn-map-view i,
+    .btn-map-view span.material-symbols-outlined {
+        font-size: 16px;
+        font-weight: normal;
+    }

@@ -1,0 +1,112 @@
+﻿@model List<Contact>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-style.css" />
+
+<div class="skills-container">
+	<div class="page-header">
+		<h1>İletişim Sayfası</h1>
+		<a href="/Contact/CreateContact/" class="btn-create">Yeni İletişim Girişi</a>
+	</div>
+
+	<div class="modern-table-wrapper">
+		<table class="modern-table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Adres</th>
+					<th>Telefon</th>
+					<th>Email</th>
+					<th>Web Sitesi</th>
+					<th>Harita Konumu</th>
+					<th>Sil</th>
+					<th>Güncelle</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<span class="badge-id">@item.ContactId</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Address</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Phone</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.Email</span>
+						</td>
+						<td>
+							<span class="skill-title">@item.WebSite</span>
+						</td>
+						<td>
+							@if (!string.IsNullOrEmpty(item.MapLocation))
+    {
+        <button type="button" 
+                class="btn-map-view map-modal-trigger" 
+                data-map="@item.MapLocation">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            
+            Konumu Gör
+        </button>
+    }
+    else
+    {
+        <span style="color: #94a3b8; font-size: 12px; font-style: italic;">
+            Konum Yok
+        </span>
+    }
+						</td>
+						<td>
+							<a href="/Contact/DeleteContact/@item.ContactId" class="btn-action btn-delete">Sil</a>
+						</td>
+						<td>
+							<a href="/Contact/UpdateContact/@item.ContactId" class="btn-action btn-update">Güncelle</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mapButtons = document.querySelectorAll('.map-modal-trigger');
+
+        mapButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Datayı al
+                const mapContent = this.getAttribute('data-map');
+                
+                // SweetAlert ile göster
+                Swal.fire({
+                    title: '<span style="color:#333">Lokasyon Bilgisi</span>',
+                    html: `<div style="width:100%; height:400px; border-radius:10px; overflow:hidden;">${mapContent}</div>`,
+                    width: 700,
+                    padding: '1em',
+                    showCloseButton: true,
+                    showConfirmButton: false, // "Tamam" butonuna gerek yok
+                    background: '#fff',
+                    backdrop: `
+                        rgba(0,0,123,0.1)
+                        left top
+                        no-repeat
+                    `
+                });
+            });
+        });
+    });
+</script>

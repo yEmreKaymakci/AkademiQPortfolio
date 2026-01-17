@@ -12,6 +12,24 @@ namespace AkademiQPortfolio.Controllers
         {
             _context = context;
         }
+        public IActionResult Index()
+        {
+            var values = _context.Contacts.ToList();
+            return View(values);
+        }
+
+        [HttpGet]
+        public IActionResult CreateContact(int id)
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateContact(Contact contact)
+        {
+            _context.Contacts.Add(contact);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
         public IActionResult UpdateContact(int id)
         {
@@ -25,20 +43,14 @@ namespace AkademiQPortfolio.Controllers
             _context.Contacts.Update(contact);
             _context.SaveChanges();
             return RedirectToAction("UpdateContact");
-            //if (ModelState.IsValid)
-            //{
-            //    var values = _context.Contacts.Find(contact.ContactId);
-            //    values.Address = contact.Address;
-            //    values.Phone = contact.Phone;
-            //    values.Email = contact.Email;
-            //    values.WebSite = contact.WebSite;
-            //    values.MapLocation = contact.MapLocation;
-            //    _context.SaveChanges();
-            //    TempData["Update"] = "Bilgiler başarıyla güncellendi!";
-            //    return Redirect("/Contact/UpdateContact/1");
-            //}
-            //return View(contact);
 
+        }
+        public IActionResult DeleteContact(int id)
+        {
+            var value = _context.Contacts.Find(id);
+            _context.Contacts.Remove(value);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,110 +1,93 @@
-﻿<div class="search-overlay"></div>
-<div class="search">
-	<a href="" class="search-close"><i class="md md-close"></i></a>
-	<div class="row">
-		<div class="col-sm-6 col-sm-offset-3">
-			<h4>Aranacak Kelimeleri Girip Enter tuşuna Basınız </h4>
-			<form class="search-form">
-				<input type="text" id="search" name="search" class="text-center" />
-			</form> <!-- end .search-form -->
-		</div> <!-- end .col-sm-6 -->
-	</div> <!-- end .row -->
-</div> <!-- end .row -->
-<!-- Slide Out -->
-<div class="slide-out-overlay"></div>
-<div class="slide-out">
-	<header class="slide-out-header clearfix">
-		<div class="clearfix">
-			<a href="" class="slide-out-close pull-left"><i class="md md-close"></i></a>
-			<a href="" class="open-search pull-right"><i class="md md-search"></i></a>
-			<a href="" class="slide-out-share pull-right"><i class="md md-more-vert"></i></a>
-		</div> <!-- end .clearfix -->
-		<!-- Popup -->
-		<div class="slide-out-popup">
-			<nav class="social-nav">
-				<ul class="list-unstyled">
-					<li><a href="">Facebook</a></li>
-					<li><a href="">Twitter</a></li>
-					<li><a href="">Linkedin</a></li>
-					<li><a href="">Google+</a></li>
-					<li><a href="">Behance</a></li>
-				</ul> <!-- end .list-unstyled -->
-			</nav> <!-- end .social-nav -->
-		</div> <!-- end .slide-out-popup -->
-		<div class="image"><img src="/sility/images/head01.png" alt="alt text" class="img-responsive"></div>
-		<div class="content">
-			<h5>Yunus Emre Kaymakcı</h5>
-			<span>Web & UX Designer</span>
-		</div> <!-- end .content -->
-		<div class="text-right">
-			<a href="" class="button link-button white icon-left"><i class="md md-file-download"></i>Cv'mi İndir'</a>
-		</div> <!-- end .text-right -->
-	</header> <!-- end .slide-out-header -->
-	<div class="slide-out-widgets">
-		<div class="slide-out-widget">
-			<h4>Bana Ulaşın</h4>
-			<form action="scripts/contact.php" method="post" class="form-horizontal contact-form">
-				<div class="form-group">
-					<label class="col-sm-3 control-label">Adınız</label>
-					<div class="col-sm-9">
-						<input type="text" class="contact-name" name="contact-name" />
-					</div> <!-- end .col-sm-9 -->
-				</div> <!-- end .form-group -->
-				<div class="form-group">
-					<label class="col-sm-3 control-label">Email</label>
-					<div class="col-sm-9">
-						<input type="email" class="contact-email" name="contact-email" />
-					</div> <!-- end .col-sm-9 -->
-				</div> <!-- end .form-group -->
-				<div class="form-group">
-					<label class="col-sm-3 control-label">Mesajınız</label>
-					<div class="col-sm-9">
-						<textarea name="contact-message" class="contact-message" rows="3"></textarea>
-					</div> <!-- end .col-sm-9 -->
-				</div> <!-- end .form-group -->
-				<div class="form-group">
-					<div class="col-sm-9 col-sm-offset-3">
-						<button type="submit" class="button solid-button purple">Mesajı Gönder</button>
-					</div> <!-- end .col-sm-9 -->
-				</div> <!-- end .form-group -->
-				<div class="contact-loading alert alert-info form-alert">
-					<span class="message">Yükleniyor...</span>
-					<button type="button" class="close" data-hide="alert" aria-label="Close"><i class="fa fa-times"></i></button>
-				</div>
-				<div class="contact-success alert alert-success form-alert">
-					<span class="message">Başarılı!</span>
-					<button type="button" class="close" data-hide="alert" aria-label="Close"><i class="fa fa-times"></i></button>
-				</div>
-				<div class="contact-error alert alert-danger form-alert">
-					<span class="message">Hata!</span>
-					<button type="button" class="close" data-hide="alert" aria-label="Close"><i class="fa fa-times"></i></button>
-				</div>
-			</form> <!-- end contact-form -->
-		</div> <!-- end .slide-out-widget -->
-		<div class="slide-out-widget">
-			<h4>İnstagramdan Takip Edin!</h4>
-			<div class="instagram">
-				<a href=""><img src="/sility/images/instagram01.jpg" alt="alt text" class="img-responsive"></a>
-				<a href=""><img src="/sility/images/instagram02.jpg" alt="alt text" class="img-responsive"></a>
-				<a href=""><img src="/sility/images/instagram03.jpg" alt="alt text" class="img-responsive"></a>
-				<a href=""><img src="/sility/images/instagram04.jpg" alt="alt text" class="img-responsive"></a>
-				<a href=""><img src="/sility/images/instagram05.jpg" alt="alt text" class="img-responsive"></a>
-				<a href=""><img src="/sility/images/instagram06.jpg" alt="alt text" class="img-responsive"></a>
-			</div> <!-- end .instagram -->
-		</div> <!-- end .slide-out-widget -->
-	</div> <!-- end .slide-out-widgets -->
-</div> <!-- end .slide-out -->
+﻿@model List<Contact>
 
+@{
+    // Eğer veri gelirse ilkini al, yoksa boş kalmasın diye varsayılan değerler
+    var contact = Model?.FirstOrDefault();
+    string myImage = "/sility/images/man01.png"; // Kendi resim yolunu buraya yazabilirsin
+}
 
+<div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden transition-opacity duration-300 opacity-0" onclick="toggleSidebar()"></div>
 
-<div class="responsive-menu">
-	<a href="" class="responsive-menu-close">Close <i class="ion-android-close"></i></a>
-	<nav class="responsive-nav"></nav> <!-- end .responsive-nav -->
-</div> <!-- end .responsive-menu -->
-<!-- Section Navigation -->
-<div class="section-nav">
-	<nav class="section1">
-		<a href="#section2" class="forward"><i class="md md-chevron-right"></i></a>
-		<a href="#section1" class="backward"><i class="md md-chevron-left"></i></a>
-	</nav>
-</div>
+<aside id="right-sidebar" class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-[70] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+
+    <div class="relative bg-brand-600 p-8 text-center shrink-0">
+        <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white/70 hover:text-white hover:rotate-90 transition-all duration-300">
+            <i class="bi bi-x-lg text-2xl"></i>
+        </button>
+
+        <div class="w-24 h-24 mx-auto bg-white p-1 rounded-full shadow-lg mb-4">
+            <img src="@myImage" alt="Profil" class="w-full h-full object-cover rounded-full">
+        </div>
+
+        <h3 class="text-white font-bold text-xl">Yunus Emre</h3>
+        <p class="text-brand-100 text-sm mb-6">Full Stack Developer</p>
+
+        <a href="~/files/YunusEmre_CV.pdf" download="YunusEmre_CV.pdf" class="inline-flex items-center gap-2 px-6 py-2 bg-white text-brand-600 font-bold rounded-full shadow-lg hover:bg-brand-50 hover:scale-105 transition-all duration-300 text-sm">
+            <i class="bi bi-cloud-arrow-down-fill text-lg"></i>
+            CV'mi İndir
+        </a>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-8">
+
+        <div class="mb-8">
+            <h4 class="text-slate-800 font-bold mb-4 flex items-center gap-2">
+                <i class="bi bi-person-lines-fill text-brand-600"></i> İletişim Bilgileri
+            </h4>
+            <ul class="space-y-3 text-sm text-slate-600">
+                @if (contact != null)
+                {
+                    <li class="flex items-start gap-3">
+                        <i class="bi bi-geo-alt text-brand-500"></i>
+                        <span>@contact.Address</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="bi bi-envelope text-brand-500"></i>
+                        <a href="mailto:@contact.Email" class="hover:text-brand-600">@contact.Email</a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <hr class="border-gray-100 mb-8">
+
+        <div>
+            <h4 class="text-slate-800 font-bold mb-4 flex items-center gap-2">
+                <i class="bi bi-send-fill text-brand-600"></i> Hızlı Mesaj
+            </h4>
+
+            <form id="sidebar-contact-form" onsubmit="sendSidebarMessage(event)">
+                <div class="space-y-4">
+
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 text-slate-400"><i class="bi bi-person"></i></span>
+                        <input type="text" name="SenderName" required placeholder="Adınız" class="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 text-slate-400"><i class="bi bi-envelope"></i></span>
+                        <input type="email" name="SenderEmail" required placeholder="Email" class="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+
+                    <input type="hidden" name="MessageSubject" value="Sidebar Hızlı Mesaj">
+
+                    <textarea name="MessageText" rows="3" required placeholder="Mesajınız..." class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+
+                    <button type="submit" id="btn-sidebar-submit" class="w-full py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-700 transition-colors text-sm flex items-center justify-center gap-2">
+                        Gönder <i class="bi bi-cursor-fill"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="p-6 border-t border-gray-100 bg-gray-50 shrink-0 text-center">
+        <p class="text-xs text-slate-400 mb-3">Sosyal Medya</p>
+        <div class="flex justify-center gap-4">
+            <a href="#" class="w-8 h-8 rounded-full bg-white text-slate-600 hover:bg-brand-600 hover:text-white flex items-center justify-center shadow-sm transition-all"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="w-8 h-8 rounded-full bg-white text-slate-600 hover:bg-gray-900 hover:text-white flex items-center justify-center shadow-sm transition-all"><i class="bi bi-github"></i></a>
+            <a href="#" class="w-8 h-8 rounded-full bg-white text-slate-600 hover:bg-blue-400 hover:text-white flex items-center justify-center shadow-sm transition-all"><i class="bi bi-twitter-x"></i></a>
+        </div>
+    </div>
+</aside>

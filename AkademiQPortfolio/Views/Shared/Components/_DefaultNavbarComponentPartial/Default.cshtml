@@ -1,41 +1,47 @@
-﻿<header class="header">
-	<div class="top clearfix">
-		<a href="#section8" class="available"><i class="ion-ios-email-outline"></i><span>Available For Freelance</span></a>
-		<div class="right-icons">
-			<a href="" class="open-search header-open-search"><i class="md md-search"></i></a>
-			<a href="" class="download"><i class="md md-file-download"></i></a>
-			<a href="" class="share"><i class="md md-more-vert"></i></a>
-		</div> <!-- end .right-icons -->
-		<!-- Popup -->
-		<div class="popup">
-			<nav class="social-nav">
-				<ul class="list-unstyled">
-					<li><a href="">Facebook</a></li>
-					<li><a href="">Twitter</a></li>
-					<li><a href="">Linkedin</a></li>
-					<li><a href="">Google+</a></li>
-					<li><a href="">Behance</a></li>
-				</ul> <!-- end .list-unstyled -->
-			</nav> <!-- end .social-nav -->
-		</div> <!-- end .popup -->
-	</div> <!-- end .top -->
-	<div class="bottom clearfix">
-		<div class="title"><a href="index.html">Yunus Emre Kaymakcı</a></div>
-		<div class="header-action-button-wrapper">
-			<a href="" class="header-action-button action-button"><i class="md md-add"></i></a>
-		</div> <!-- end .header-action-button-wrapper -->
-		<a href="" class="responsive-menu-open">Menu <i class="fa fa-bars"></i></a>
-		<nav class="main-nav">
-			<ul class="list-unstyled">
-				<li class="active"><a href="#section1">Ana Sayfa</a></li>
-				<li><a href="#section2">Hakkımda</a></li>
-				<li><a href="#section3">Yetenekler</a></li>
-				<li><a href="#section4">Deneyim</a></li>
-				<li><a href="#section5">Eğitim</a></li>
-				<li><a href="#section6">Projelerim</a></li>
-				<li><a href="#section7">Blog</a></li>
-				<li><a href="#section8">Bana Yazın</a></li>
-			</ul>
-		</nav> <!-- end .main-nav -->
-	</div> <!-- end .bottom -->
-</header> <!-- end .header -->
+﻿<nav id="main-navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent py-4">
+    <div class="container mx-auto px-6">
+        <div class="flex items-center justify-between">
+
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-brand-600 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-brand-500/30 group-hover:scale-110 transition-transform duration-300">
+                    Y
+                </div>
+                <span class="text-xl font-bold text-slate-800 tracking-tight">
+                    Yunus<span class="text-brand-600">.Dev</span>
+                </span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#section1" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Ana Sayfa</a>
+                <a href="#section2" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Hakkımda</a>
+                <a href="#section3" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Yetenekler</a>
+                <a href="#section4" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Deneyim</a>
+                <a href="#section5" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Eğitim</a>
+                <a href="#section6" class="nav-link text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Projeler</a>
+
+                <a href="#section8" class="px-5 py-2.5 bg-brand-600 text-white text-sm font-semibold rounded-full shadow-lg shadow-brand-500/30 hover:bg-brand-700 hover:-translate-y-0.5 transition-all duration-300">
+                    İletişime Geç
+                </a>
+                <button onclick="toggleSidebar()" class="ml-4 w-10 h-10 rounded-full bg-gray-100 text-slate-700 hover:bg-brand-600 hover:text-white transition-all flex items-center justify-center shadow-sm" title="Menüyü Aç">
+                    <i class="bi bi-grid-fill text-lg"></i>
+                </button>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden text-slate-800 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-xl md:hidden">
+        <div class="flex flex-col p-6 gap-4">
+            <a href="#section1" class="mobile-nav-link text-slate-600 font-medium hover:text-brand-600">Ana Sayfa</a>
+            <a href="#section2" class="mobile-nav-link text-slate-600 font-medium hover:text-brand-600">Hakkımda</a>
+            <a href="#section3" class="mobile-nav-link text-slate-600 font-medium hover:text-brand-600">Yetenekler</a>
+            <a href="#section4" class="mobile-nav-link text-slate-600 font-medium hover:text-brand-600">Deneyim</a>
+            <a href="#section5" class="mobile-nav-link text-slate-600 font-medium hover:text-brand-600">Eğitim</a>
+            <a href="#section6" class="mobile-nav-link text-slate-600 font-medium hover:text-brand-600">Projeler</a>
+            <a href="#section8" class="text-center w-full px-5 py-3 bg-brand-600 text-white font-bold rounded-xl mt-2">Bana Ulaşın</a>
+        </div>
+    </div>
+</nav>

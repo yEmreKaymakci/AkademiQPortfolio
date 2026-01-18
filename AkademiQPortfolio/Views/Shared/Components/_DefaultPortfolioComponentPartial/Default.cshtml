@@ -1,33 +1,88 @@
 ﻿@model List<Work>
-<section id="section6">
-	<div class="container">
-		<h2>Projelerim ve Çalışmalarım</h2>
-		<div class="portfolio-wrapper">
-			<div id="portfolio-filters" class="portfolio-filters">
-				<button class="button solid-button white-purple small" data-filter="*">Hepsini Göster</button>
-				<button class="button solid-button white-purple small" data-filter=".branding">Mobil</button>
-				<button class="button solid-button white-purple small" data-filter=".print">Web Uygulaması</button>
-				<button class="button solid-button white-purple small" data-filter=".motion">Veri Analizleri</button>
-				<button class="button solid-button white-purple small" data-filter=".websites">Tasarımlarım</button>
-			</div>
-			<div id="portfolio" class="portfolio">
-				@foreach(var item in Model)
-				{
-					<div class="item branding print">
-						<img src="@item.ImageUrl" alt="alt text" class="img-responsive">
-						<a href="single-portfolio.html" class="overlay">
-							<div class="background"></div>
-							<div class="meta">
-								<span class="title">@item.Title</span>
-								<span class="category">@item.SubTitle</span>
-							</div> <!-- end .meta -->
-						</a> <!-- end .overlay -->
-					</div>
-				}
 
-			<div class="portfolio-load-more">
-				<a href="single-portfolio.html" class="button solid-button white icon-right">Load More Work<i class="md-refresh"></i></a>
-			</div> <!-- end .portfolio-load-more -->
-		</div> <!-- end .portfolio-wrapper -->
-	</div> <!-- end .container -->
+<section id="section6" class="py-24 bg-slate-200 relative overflow-hidden">
+
+    <div class="container mx-auto px-6 relative z-10">
+
+        <div class="text-center mb-12">
+            <span class="text-brand-600 font-bold tracking-wider uppercase text-sm bg-brand-50 px-3 py-1 rounded-full">Projelerim</span>
+            <h2 class="text-4xl font-extrabold text-slate-900 mt-4">Seçilmiş Çalışmalar</h2>
+            <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
+                Web, Mobil ve Masaüstü platformlarında geliştirdiğim en güncel projeler.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <button class="filter-btn active px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 bg-brand-600 text-white shadow-lg shadow-brand-500/30 cursor-pointer" data-filter="all">
+                Tümü
+            </button>
+            <button class="filter-btn px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 bg-white text-slate-600 hover:bg-brand-50 hover:text-brand-600 shadow-sm border border-gray-100 cursor-pointer" data-filter="Web">
+                Web
+            </button>
+            <button class="filter-btn px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 bg-white text-slate-600 hover:bg-brand-50 hover:text-brand-600 shadow-sm border border-gray-100 cursor-pointer" data-filter="Mobil">
+                Mobil
+            </button>
+            <button class="filter-btn px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 bg-white text-slate-600 hover:bg-brand-50 hover:text-brand-600 shadow-sm border border-gray-100 cursor-pointer" data-filter="Masaüstü">
+                Masaüstü
+            </button>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
+
+                @foreach (var item in Model)
+                {
+                    // Kategori belirleme mantığı
+                    string category = "Web";
+                    if (item.SubTitle != null)
+                    {
+                        if (item.SubTitle.Contains("Mobil", StringComparison.OrdinalIgnoreCase)) { category = "Mobil"; }
+                        else if (item.SubTitle.Contains("Masaüstü", StringComparison.OrdinalIgnoreCase) || item.SubTitle.Contains("Desktop", StringComparison.OrdinalIgnoreCase)) { category = "Masaüstü"; }
+                    }
+
+                    <div class="portfolio-item group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100"
+                         data-category="@category">
+
+                        <div class="relative overflow-hidden h-60">
+                            <div class="absolute inset-0 bg-brand-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center gap-4">
+                                <a href="@item.WorkUrl" class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-600 hover:bg-brand-600 hover:text-white transition-all transform hover:scale-110">
+                                    <i class="bi bi-link-45deg text-2xl"></i>
+                                </a>
+                                <a href="@item.WorkUrl" class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-600 hover:bg-brand-600 hover:text-white transition-all transform hover:scale-110">
+                                    <i class="bi bi-github text-xl"></i>
+                                </a>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Title" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            }
+                            else
+                            {
+                                <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">
+                                    <i class="bi bi-image text-4xl"></i>
+                                </div>
+                            }
+
+                            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-brand-600 shadow-sm z-0">
+                                @item.Title
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-colors">
+                                @item.Title
+                            </h3>
+
+                            <div class="pt-4 border-t border-gray-50 flex items-center justify-between">
+                                <span class="text-xs font-medium text-slate-400">@item.SubTitle</span>
+                                <i class="bi bi-arrow-right text-brand-600 group-hover:translate-x-2 transition-transform duration-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
 </section>

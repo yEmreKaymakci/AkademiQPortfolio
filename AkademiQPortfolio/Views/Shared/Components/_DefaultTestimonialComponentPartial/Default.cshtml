@@ -1,18 +1,76 @@
 ﻿@model List<Testimonial>
-<!-- Testimonials -->
-<div class="row">
-	<div class="col-sm-8 col-sm-offset-2">
-		<div class="testimonial-slider owl-carousel">
 
-			@foreach (var item in Model)
-			{
-				<div>
-					<div class="image"><img src="@item.ImageUrl" alt="alt text"></div>
-					<div class="sep">@item.NameSurname</div>
-					<p>@item.Comment</p>
-					<span class="author">@item.Title</span>
-				</div>
-			}
-		</div> <!-- end .testimonial-slider -->
-	</div> <!-- end .col-sm-8 -->
-</div> <!-- end .row -->
+<section id="testimonials" class="py-24 bg-slate-200 relative overflow-hidden">
+
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+    <div class="container mx-auto px-6 relative z-10">
+
+        <div class="text-center mb-16">
+            <span class="text-brand-600 font-bold tracking-wider uppercase text-sm bg-brand-50 px-3 py-1 rounded-full">Referanslar</span>
+            <h2 class="text-4xl font-extrabold text-slate-900 mt-4">Hakkımda Ne Dediler?</h2>
+            <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
+                Birlikte çalıştığım iş ortaklarım ve müşterilerimin geri bildirimleri.
+            </p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                @foreach (var item in Model)
+                {
+                    <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full relative group">
+
+                        <div class="absolute top-6 right-8 text-6xl text-brand-100 font-serif opacity-50 group-hover:text-brand-200 transition-colors">
+                            &rdquo;
+                        </div>
+
+                        <div class="flex gap-1 text-yellow-400 mb-6 text-sm">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+
+                        <p class="text-slate-600 leading-relaxed mb-8 flex-grow italic">
+                            "@item.Comment"
+                        </p>
+
+                        <div class="flex items-center gap-4 mt-auto pt-6 border-t border-gray-50">
+
+                            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-brand-100 shrink-0">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.NameSurname" class="w-full h-full object-cover">
+                                }
+                                else
+                                {
+                                    <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold">
+                                        @item.NameSurname?.Substring(0, 1)
+                                    </div>
+                                }
+                            </div>
+
+                            <div>
+                                <h4 class="text-slate-900 font-bold text-sm">@item.NameSurname</h4>
+                                <p class="text-brand-600 text-xs font-semibold uppercase tracking-wide">@item.Title</p>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-12 bg-white rounded-xl border border-dashed border-gray-200">
+                <p class="text-slate-400">Henüz referans eklenmemiş.</p>
+            </div>
+        }
+
+    </div>
+</section>

@@ -1,0 +1,274 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Admin/Index.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .glass-card {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .neon-text {
+        text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+</style>
+
+<div class="p-6 bg-[#0f172a] min-h-screen text-slate-200">
+
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h2 class="text-4xl font-bold text-white neon-text">Nexus Komuta Paneli</h2>
+            <p class="text-slate-400 text-sm mt-1 uppercase tracking-widest">Sistem Durumu ve Analitikler</p>
+        </div>
+        <div class="text-right hidden md:block">
+            <div class="text-2xl font-bold text-indigo-400" id="clock">00:00</div>
+            <div class="text-xs text-slate-500">@DateTime.Now.ToString("dd MMMM yyyy")</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+        <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-indigo-500/20 rounded-full blur-2xl group-hover:bg-indigo-500/40 transition-all"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs text-indigo-300 uppercase font-bold">Toplam Mesaj</p>
+                    <h3 class="text-3xl font-black text-white mt-1">@Model.TotalMessages</h3>
+                </div>
+                <div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-xs text-slate-400">
+                <span class="text-rose-400 font-bold">@Model.UnreadMessages</span> okunmamış bildirim
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/20 rounded-full blur-2xl group-hover:bg-emerald-500/40 transition-all"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs text-emerald-300 uppercase font-bold">Yayındaki Projeler</p>
+                    <h3 class="text-3xl font-black text-white mt-1">@Model.TotalProjects</h3>
+                </div>
+                <div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-xs text-slate-400">Aktif portfolyo öğeleri</div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-amber-500/20 rounded-full blur-2xl group-hover:bg-amber-500/40 transition-all"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs text-amber-300 uppercase font-bold">Yetenek Havuzu</p>
+                    <h3 class="text-3xl font-black text-white mt-1">@Model.TotalSkills</h3>
+                </div>
+                <div class="p-2 bg-amber-500/20 rounded-lg text-amber-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-xs text-slate-400">Ortalama Yetkinlik: <span class="text-white font-bold">%@Model.AverageSkillValue.ToString("0")</span></div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl group-hover:bg-cyan-500/40 transition-all"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs text-cyan-300 uppercase font-bold">Sistem Sağlığı</p>
+                    <h3 class="text-3xl font-black text-white mt-1">%100</h3>
+                </div>
+                <div class="p-2 bg-cyan-500/20 rounded-lg text-cyan-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-xs text-slate-400">Tüm servisler aktif</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+        <div class="glass-card p-6 rounded-2xl col-span-2">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span class="w-2 h-6 bg-amber-500 rounded-full"></span>
+                Yetenek Dağılımı (Radar)
+            </h3>
+            <div class="h-[300px] w-full flex justify-center">
+                <canvas id="skillsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl col-span-1">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span class="w-2 h-6 bg-indigo-500 rounded-full"></span>
+                Gelen İleti Analizi
+            </h3>
+            <div class="h-[300px] w-full flex justify-center relative">
+                <canvas id="messagesChart"></canvas>
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white">@Model.TotalMessages</div>
+                        <div class="text-xs text-slate-400">Toplam</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="glass-card p-6 rounded-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
+                    Son Eklenen Projeler
+                </h3>
+                <a href="/Works/Index" class="text-xs text-emerald-400 hover:text-emerald-300">Tümünü Gör →</a>
+            </div>
+
+            <div class="space-y-4">
+                @foreach (var item in Model.LastProjects)
+                {
+                    <div class="flex items-center gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                            @item.Title?.Substring(0, 1)
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-white font-bold text-sm">@item.Title</h4>
+                            <p class="text-xs text-slate-400">@item.SubTitle</p>
+                        </div>
+                        <span class="text-[10px] px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30">Dev</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="w-2 h-6 bg-rose-500 rounded-full"></span>
+                    İletişim Terminali
+                </h3>
+                <a href="/Message/Index" class="text-xs text-rose-400 hover:text-rose-300">Gelen Kutusuna Git →</a>
+            </div>
+
+            <div class="space-y-3 font-mono text-xs">
+                @foreach (var msg in Model.LastMessages)
+                {
+                    <div class="group flex gap-3 p-3 rounded-lg hover:bg-white/5 transition-all cursor-default">
+                        <div class="text-slate-500 min-w-[50px]">@(((DateTime)msg.SendDate).ToString("HH:mm"))</div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-indigo-400 font-bold">@msg.SenderName</span>
+                                <span class="text-slate-600">></span>
+                                <span class="text-rose-300 truncate">@msg.MessageSubject</span>
+                            </div>
+                            <p class="text-slate-400 mt-1 truncate max-w-[300px]">@msg.MessageText</p>
+                        </div>
+                        @if (msg.IsRead == false)
+                        {
+                            <div class="w-2 h-2 rounded-full bg-rose-500 animate-pulse mt-1"></div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- SAAT GÜNCELLEME ---
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
+
+    // --- CHART.JS CONFIG ---
+
+    // 1. RADAR CHART (Yetenekler)
+    const ctxSkills = document.getElementById('skillsChart').getContext('2d');
+
+    // Modelden gelen verileri JS dizisine çeviriyoruz
+    const skillLabels = @Html.Raw(Json.Serialize(Model.TopSkills.Select(x => x.SkillTitle)));
+    const skillValues = @Html.Raw(Json.Serialize(Model.TopSkills.Select(x => x.SkillValue)));
+
+    new Chart(ctxSkills, {
+        type: 'radar',
+        data: {
+            labels: skillLabels,
+            datasets: [{
+                label: 'Yetenek Seviyesi',
+                data: skillValues,
+                backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber
+                borderColor: 'rgba(245, 158, 11, 1)',
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(245, 158, 11, 1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    pointLabels: {
+                        color: '#cbd5e1', // text-slate-300
+                        font: { size: 12, family: 'Space Grotesk' }
+                    },
+                    ticks: { display: false, backdropColor: 'transparent' }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // 2. DOUGHNUT CHART (Mesaj Dağılımı)
+    const ctxMessages = document.getElementById('messagesChart').getContext('2d');
+    new Chart(ctxMessages, {
+        type: 'doughnut',
+        data: {
+            labels: ['İş Teklifi', 'Eğitim', 'API/Web'],
+            datasets: [{
+                data: [@Model.JobOfferCount, @Model.EduRequestCount, @Model.ApiRequestCount],
+                backgroundColor: [
+                    'rgba(16, 185, 129, 0.8)', // Emerald (İş)
+                    'rgba(244, 63, 94, 0.8)',  // Rose (Eğitim)
+                    'rgba(6, 182, 212, 0.8)'   // Cyan (API)
+                ],
+                borderColor: '#0f172a', // Arkaplan rengi ile aynı (border yokmuş gibi)
+                borderWidth: 4,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%', // Ortadaki boşluk
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#cbd5e1', font: { family: 'Space Grotesk' } }
+                }
+            }
+        }
+    });
+</script>

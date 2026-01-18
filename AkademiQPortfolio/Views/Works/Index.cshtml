@@ -20,6 +20,7 @@
 					<th>Proje Adı</th>
 					<th>Proje Bilgisi</th>
 					<th>Resim Linki</th>
+					<th>Proje Linki</th>
 					<th>Sil</th>
 					<th>Güncelle</th>
 				</tr>
@@ -43,6 +44,9 @@
 									 class="admin-img-preview cursor-pointer"
 									 onclick="openModal(this.src)">
 							</div>
+						</td>
+						<td>
+							<span class="skill-title">@item.WorkUrl</span>
 						</td>
 						<td>
 							<a href="/Works/DeleteWork/@item.WorkId" class="btn-action btn-delete">Sil</a>

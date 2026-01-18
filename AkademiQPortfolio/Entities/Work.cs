@@ -12,4 +12,6 @@ public partial class Work
     public string? SubTitle { get; set; }
 
     public string? ImageUrl { get; set; }
+
+    public string? WorkUrl { get; set; }
 }

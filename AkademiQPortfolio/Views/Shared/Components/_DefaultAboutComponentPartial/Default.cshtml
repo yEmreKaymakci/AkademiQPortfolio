@@ -1,38 +1,122 @@
 ﻿@model List<About>
-<section id="section2">
-	<div class="container">
-		<h2>Hakkımda</h2>
 
-		@foreach (var item in Model)
-		{
-			<div class="row">
-				<div class="col-sm-3">
-					<img src="@item.ImageUrl" alt="man" class="img-responsive section-img">
-				</div> <!-- end .col-sm-3 -->
-				<div class="col-sm-9">
-					<h3 class="small-margin-bottom">@item.NameSurname</h3>
-					<h5>@item.Title</h5>
-					<p>@item.Description</p>
-					<div class="signature"><img src="/sility/images/signature.png" alt="signature" class="img-responsive"></div>
-					<ul class="list-unstyled text-uppercase">
-						<li><b>Telefon:</b>@item.PhoneNumber</li>
-						<li><b>Email:</b> @item.Email</li>
-						<li><b>Adres:</b> @item.Address</li>
-						<li><b>Github:</b> http://github.com/yEmreKaymakci</li>
-					</ul> <!-- end .list-unstyled -->
-					<div class="spacer"></div>
-					<h3>Ne İş Yapıyorum</h3>
-					<div class="row">
-						<div class="col-sm-4">
-							<div class="service">
-								<div class="icon"><i class="ion-monitor"></i></div>
-								<h5>@item.Title</h5>
-							</div> <!-- end .service -->
-						</div> 
-				</div> <!-- end .col-sm-9 -->
-			</div>
-			</div>
-		}
-		 <!-- end .row -->
-	</div> <!-- end .container -->
-</section> 
+@{
+    var profile = Model?.FirstOrDefault();
+}
+
+<section id="section2" class="py-24 bg-slate-200 relative overflow-hidden">
+
+    <div class="absolute top-0 left-0 w-32 h-32 opacity-10">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <pattern id="dotPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="2" class="text-brand-600" fill="currentColor" />
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#dotPattern)" />
+        </svg>
+    </div>
+
+    <div class="container mx-auto px-6">
+        @if (profile != null)
+        {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-brand-100 rounded-3xl rotate-6 transform transition-transform duration-500 group-hover:rotate-3"></div>
+
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+                        <img src="@profile.ImageUrl" alt="@profile.NameSurname" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105">
+                    </div>
+
+                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-xl border border-gray-100 flex items-center gap-4 animate-float">
+                        <div class="bg-brand-600 text-white w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-bold">
+                            2+
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Yıllık</p>
+                            <p class="text-sm font-bold text-slate-800">Tecrübe</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="inline-block py-1 px-3 rounded-full bg-brand-50 text-brand-600 text-sm font-bold tracking-wider mb-4">
+                        Hakkımda
+                    </span>
+
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
+                        @profile.Title <br>
+                        <span class="text-brand-600">Çözüm Odaklı Yaklaşım</span>
+                    </h2>
+
+                    <p class="text-slate-600 text-lg leading-relaxed mb-8">
+                        @profile.Description
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-brand-600 shrink-0">
+                                <i class="bi bi-person-fill text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-400 uppercase">İsim Soyisim</h4>
+                                <p class="text-slate-800 font-semibold">@profile.NameSurname</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-brand-600 shrink-0">
+                                <i class="bi bi-envelope-fill text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-400 uppercase">Email</h4>
+                                <p class="text-slate-800 font-semibold text-sm break-all">@profile.Email</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-brand-600 shrink-0">
+                                <i class="bi bi-telephone-fill text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-400 uppercase">Telefon</h4>
+                                <p class="text-slate-800 font-semibold">@profile.PhoneNumber</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-brand-600 shrink-0">
+                                <i class="bi bi-geo-alt-fill text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-400 uppercase">Adres</h4>
+                                <p class="text-slate-800 font-semibold">@profile.Address</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-6 pt-6 border-t border-gray-100">
+                        <a href="#section8" class="px-6 py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20">
+                            Projemi Başlat
+                        </a>
+
+                        <div class="font-['Sacramento'] text-3xl text-slate-400 rotate-[-5deg]">
+                            @profile.NameSurname
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="text-center p-10 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                <p class="text-slate-500">Hakkımda bilgisi henüz eklenmemiş.</p>
+                <a href="/About/Index" class="text-brand-600 font-bold hover:underline">Admin panelinden ekle</a>
+            </div>
+        }
+    </div>
+</section>
+
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">

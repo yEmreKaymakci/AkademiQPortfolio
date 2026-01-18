@@ -1,0 +1,125 @@
+﻿/* =========================================
+   1. TEMEL AYARLAR (RESET)
+   ========================================= */
+
+/* Sitenin genel zemin rengi (HTML'deki slate-200 ile uyumlu) */
+body {
+    background-color: #f1f5f9; /* Slate-100 */
+    color: #1e293b; /* Slate-800 (Varsayılan Yazı Rengi) */
+    overflow-x: hidden;
+}
+
+/* Yumuşak kaydırma */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Metin seçildiğinde çıkacak renk */
+::selection {
+    background-color: #6366f1; /* Brand-500 */
+    color: #ffffff;
+}
+
+/* =========================================
+   2. KART GÖRÜNÜMLERİ (YUMUŞAK)
+   ========================================= */
+
+/* Beyaz kartlara çok hafif, modern bir gölge veriyoruz.
+   Kenarlık (border) YOK. Sadece yumuşak bir derinlik. */
+.bg-white, .portfolio-item, .group, aside, form {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Footer her zaman koyu kalmalı */
+footer {
+    background-color: #0f172a !important; /* Slate-900 */
+    color: #cbd5e1 !important; /* Slate-300 */
+}
+
+/* =========================================
+   3. SCROLLBAR (KORUNAN ÖZELLİK)
+   ========================================= */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 5px;
+    border: 2px solid #f1f5f9;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #6366f1;
+    }
+
+/* =========================================
+   4. ANİMASYONLAR (KORUNAN ÖZELLİK)
+   ========================================= */
+
+/* Shimmer (Yetenek Barı Işıltısı) */
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Float (Yüzen Kartlar) */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Blink (Yazı İmleci) */
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-blink {
+    animation: blink 1s step-end infinite;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+
+/* =========================================
+   5. DÜZELTMELER
+   ========================================= */
+iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Navbar Scroll olduğunda beyazlaşsın */
+.bg-white\/90 {
+    background-color: rgba(255, 255, 255, 0.9);
+}

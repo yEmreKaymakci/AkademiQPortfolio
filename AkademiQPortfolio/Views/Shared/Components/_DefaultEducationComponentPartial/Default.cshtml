@@ -1,57 +1,77 @@
 ﻿@model List<Education>
 
-<section id="section5">
-	<div class="container">
-		<h2>Eğitim Hayatım</h2>
+<section id="section5" class="py-24 bg-slate-200 relative overflow-hidden">
 
+    <div class="absolute right-0 bottom-0 opacity-5 pointer-events-none transform translate-x-1/4 translate-y-1/4">
+        <svg width="400" height="400" viewBox="0 0 24 24" fill="currentColor" class="text-brand-900">
+            <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
+        </svg>
+    </div>
 
-		<div class="education clearfix">
-			@foreach(var item in Model)
-			{
-				<div class="item">
-					<div class="marker"></div>
-					<div class="content">
-						<span>@item.Title</span>
-						<h4>@item.Department</h4>
-					</div>
-					<div class="year">@item.EducationDate</div>
-				</div>
-			}
-			<div class="line"></div>
-		</div> <!-- end .education -->
+    <div class="container mx-auto px-6 relative z-10">
 
-		<h2>Hobbies & Interest</h2>
-		<div class="row">
-			<div class="col-sm-2 col-sm-offset-1 col-xs-6">
-				<div class="icon-box">
-					<div class="icon"><i class="ion-easel"></i></div>
-					<h6>Web Research</h6>
-				</div> <!-- end .icon-box -->
-			</div> <!-- end .col-sm-2 -->
-			<div class="col-sm-2 col-xs-6">
-				<div class="icon-box">
-					<div class="icon"><i class="ion-ios-camera-outline"></i></div>
-					<h6>Photography</h6>
-				</div> <!-- end .icon-box -->
-			</div> <!-- end .col-sm-2 -->
-			<div class="col-sm-2 col-xs-6">
-				<div class="icon-box">
-					<div class="icon"><i class="ion-plane"></i></div>
-					<h6>Travelling</h6>
-				</div> <!-- end .icon-box -->
-			</div> <!-- end .col-sm-2 -->
-			<div class="col-sm-2 col-xs-6">
-				<div class="icon-box">
-					<div class="icon"><i class="ion-ios-bookmarks-outline"></i></div>
-					<h6>Book Reading</h6>
-				</div> <!-- end .icon-box -->
-			</div> <!-- end .col-sm-2 -->
-			<div class="col-sm-2 col-xs-6">
-				<div class="icon-box">
-					<div class="icon"><i class="ion-ios-musical-notes"></i></div>
-					<h6>Music</h6>
-				</div> <!-- end .icon-box -->
-			</div> <!-- end .col-sm-2 -->
-		</div> <!-- end .row -->
-	</div> <!-- end .container -->
+        <div class="text-center mb-16">
+            <span class="text-brand-600 font-bold tracking-wider uppercase text-sm bg-brand-50 px-3 py-1 rounded-full">Akademik Geçmiş</span>
+            <h2 class="text-4xl font-extrabold text-slate-900 mt-4">Eğitim Hayatım</h2>
+            <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
+                Mezun olduğum okullar, aldığım sertifikalar ve katıldığım akademik programlar.
+            </p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                @{
+                    // Eğitimleri ID'ye göre veya tarihe göre sıralayabilirsin
+                    var sortedEdu = Model.OrderByDescending(x => x.EducationId).ToList();
+                }
+
+                @foreach (var item in sortedEdu)
+                {
+                    <div class="group relative bg-white border border-gray-100 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+
+                        <div class="absolute left-0 top-8 bottom-8 w-1 bg-brand-600 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                        <div class="flex items-start gap-6">
+
+                            <div class="shrink-0 w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-colors duration-300">
+                                <i class="bi bi-mortarboard-fill text-2xl"></i>
+                            </div>
+
+                            <div class="flex-1">
+                                <div class="flex flex-wrap items-center gap-3 mb-2">
+                                    <span class="px-3 py-1 bg-gray-100 text-slate-600 text-xs font-bold rounded-md border border-gray-200">
+                                        @item.EducationDate
+                                    </span>
+                                </div>
+
+                                <h3 class="text-xl font-bold text-slate-900 mb-1 group-hover:text-brand-600 transition-colors">
+                                    @item.Title
+                                </h3>
+
+                                <p class="text-slate-500 font-medium text-sm mb-4 flex items-center gap-2">
+                                    <i class="bi bi-building"></i>
+                                    @item.Department
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-50 to-transparent opacity-0 group-hover:opacity-100 rounded-bl-full transition-opacity duration-500 -z-10"></div>
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4">
+                    <i class="bi bi-book text-2xl"></i>
+                </div>
+                <p class="text-slate-500">Henüz eğitim bilgisi eklenmemiş.</p>
+            </div>
+        }
+
+    </div>
 </section>
